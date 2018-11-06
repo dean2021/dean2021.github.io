@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Golang on Dean&#39;s blog</title>
+    <link>https://dean2021.github.io/categories/golang/</link>
+    <description>Recent content in Golang on Dean&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>&amp;copy; Copyright 2018 Dean</copyright>
+    <lastBuildDate>Tue, 06 Nov 2018 20:55:35 +0800</lastBuildDate>
+    
+	<atom:link href="https://dean2021.github.io/categories/golang/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Golang投毒小技巧</title>
+      <link>https://dean2021.github.io/posts/golang-compiler-poisoning/</link>
+      <pubDate>Tue, 06 Nov 2018 20:55:35 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/golang-compiler-poisoning/</guid>
+      <description>小技巧:
+ 分享一个小玩意，修改 /usr/local/Cellar/go/1.10.3/libexec/src/runtime/proc.go 文件的main函数，加入恶意代码，以后在这台机器上编译任意go文件都会内置恶意代码，可以用来留后门 ^^
+ </description>
+    </item>
+    
+  </channel>
+</rss>

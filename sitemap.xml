@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://dean2021.github.io/posts/golang-compiler-poisoning/</loc>
+    <lastmod>2018-11-06T20:55:35+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://dean2021.github.io/posts/java-rmi/</loc>
     <lastmod>2018-11-06T19:19:22+08:00</lastmod>
   </url>
@@ -31,6 +36,24 @@
   
   <url>
     <loc>https://dean2021.github.io/</loc>
+    <lastmod>2018-11-06T20:55:35+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/tags/golang/</loc>
+    <lastmod>2018-11-06T20:55:35+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/categories/golang/</loc>
+    <lastmod>2018-11-06T20:55:35+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/tags/java/</loc>
     <lastmod>2018-11-06T19:19:22+08:00</lastmod>
     <priority>0</priority>
   </url>
@@ -42,14 +65,8 @@
   </url>
   
   <url>
-    <loc>https://dean2021.github.io/tags/java/</loc>
-    <lastmod>2018-11-06T19:19:22+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://dean2021.github.io/posts/</loc>
-    <lastmod>2018-11-06T19:19:22+08:00</lastmod>
+    <lastmod>2018-11-06T20:55:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
@@ -66,7 +83,13 @@
   
   <url>
     <loc>https://dean2021.github.io/tags/</loc>
-    <lastmod>2018-11-06T19:19:22+08:00</lastmod>
+    <lastmod>2018-11-06T20:55:35+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/tags/%E5%B0%8F%E6%8A%80%E5%B7%A7/</loc>
+    <lastmod>2018-11-06T20:55:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
