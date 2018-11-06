@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Dean&#39;s blog</title>
+    <link>https://dean2021.github.io/posts/</link>
+    <description>Recent content in Posts on Dean&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>&amp;copy; Copyright 2018 Dean</copyright>
+    <lastBuildDate>Tue, 06 Nov 2018 19:19:22 +0800</lastBuildDate>
+    
+	<atom:link href="https://dean2021.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Java RMI 入门 - [无坑篇]</title>
+      <link>https://dean2021.github.io/posts/java-rmi/</link>
+      <pubDate>Tue, 06 Nov 2018 19:19:22 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/java-rmi/</guid>
+      <description>Introduction JavaRMI用于不同虚拟机之间的通信，这些虚拟机可以在不同的主机上、也可以在同一个主机上；一个虚拟机中的对象调用另一个虚拟上中的对象的方法，只不过是允许被远程调用的对象要通过一些标志加以标识。这样做的特点如下：
+ 优点：避免重复造轮子； 缺点：调用过程很慢，而且该过程是不可靠的，容易发生不可预料的错误，比如网络错误等；
+ 在RMI中的核心是远程对象（remote object），除了对象本身所在的虚拟机，其他虚拟机也可以调用此对象的方法，而且这些虚拟机可以不在同一个主机上。每个远程对象都要实现一个或者多个远程接口来标识自己，声明了可以被外部系统或者应用调用的方法（当然也有一些方法是不想让人访问的）。
+从网上阅读了无数rmi demo和 paper，存在各种各样的坑，搞了一下午，终于填完，下方代码保证能够运行：</description>
+    </item>
+    
+    <item>
+      <title>My First Post</title>
+      <link>https://dean2021.github.io/posts/my-first-post/</link>
+      <pubDate>Tue, 06 Nov 2018 18:45:40 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/my-first-post/</guid>
+      <description> Hello, Github.io
+ </description>
+    </item>
+    
+  </channel>
+</rss>

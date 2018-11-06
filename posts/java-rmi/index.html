@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Java RMI 入门 - [无坑篇] - Dean&#39;s blog</title>
+  <meta property="og:title" content="Java RMI 入门 - [无坑篇] - Dean&#39;s blog" />
+  <meta name="twitter:title" content="Java RMI 入门 - [无坑篇] - Dean&#39;s blog" />
+  <meta name="description" content="从网上阅读了无数rmi demo和 paper，存在各种各样的坑,这篇文章一定能让你轻松入门.">
+  <meta property="og:description" content="从网上阅读了无数rmi demo和 paper，存在各种各样的坑,这篇文章一定能让你轻松入门.">
+  <meta name="twitter:description" content="从网上阅读了无数rmi demo和 paper，存在各种各样的坑,这篇文章一定能让你轻松入门.">
+  <meta name="author" content="Dean"/>
+  <meta property="og:site_name" content="Dean&#39;s blog" />
+  <meta property="og:url" content="https://dean2021.github.io/posts/java-rmi/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.42.1" />
+
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">Dean&#39;s blog</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Java RMI 入门 - [无坑篇]</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>November 6, 2018</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/java/">
+            <i class="fas fa-folder"></i>
+            java
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/java/">
+            <i class="fas fa-tag"></i>
+            java
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/rmi/">
+            <i class="fas fa-tag"></i>
+            rmi
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+      
+
+<h2 id="introduction">Introduction</h2>
+
+<p>JavaRMI用于不同虚拟机之间的通信，这些虚拟机可以在不同的主机上、也可以在同一个主机上；一个虚拟机中的对象调用另一个虚拟上中的对象的方法，只不过是允许被远程调用的对象要通过一些标志加以标识。这样做的特点如下：</p>
+
+<blockquote>
+<p>优点：避免重复造轮子；
+缺点：调用过程很慢，而且该过程是不可靠的，容易发生不可预料的错误，比如网络错误等；</p>
+</blockquote>
+
+<p>在RMI中的核心是远程对象（remote object），除了对象本身所在的虚拟机，其他虚拟机也可以调用此对象的方法，而且这些虚拟机可以不在同一个主机上。每个远程对象都要实现一个或者多个远程接口来标识自己，声明了可以被外部系统或者应用调用的方法（当然也有一些方法是不想让人访问的）。</p>
+
+<p>从网上阅读了无数rmi demo和 paper，存在各种各样的坑，搞了一下午，终于填完，下方代码保证能够运行：</p>
+
+<hr />
+
+<p>GreetService.java   接口文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span><span class="lnt">6
+</span><span class="lnt">7
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.jd.rmidemo.service</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.rmi.RemoteException</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">interface</span> <span class="nc">GreetService</span>  <span class="kd">extends</span> <span class="n">java</span><span class="o">.</span><span class="na">rmi</span><span class="o">.</span><span class="na">Remote</span> <span class="o">{</span>
+    <span class="n">String</span> <span class="nf">sayHello</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">RemoteException</span><span class="o">;</span>
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>GreetServiceImpl.java 具体实现：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.jd.rmidemo.service</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.rmi.RemoteException</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">GreetServiceImpl</span> <span class="kd">extends</span> <span class="n">java</span><span class="o">.</span><span class="na">rmi</span><span class="o">.</span><span class="na">server</span><span class="o">.</span><span class="na">UnicastRemoteObject</span> <span class="kd">implements</span> <span class="n">GreetService</span> <span class="o">{</span>
+
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="n">3434060152387200042L</span><span class="o">;</span>
+
+    <span class="kd">public</span> <span class="nf">GreetServiceImpl</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">sayHello</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">RemoteException</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="s">&#34;Hello &#34;</span> <span class="o">+</span> <span class="n">name</span><span class="o">;</span>
+    <span class="o">}</span>
+
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>Server.java   远程部署的RMI Server文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.jd.rmidemo.main</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.jd.rmidemo.service.GreetServiceImpl</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.rmi.registry.LocateRegistry</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.rmi.registry.Registry</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Server</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="c1">// 2333是RMI Service监听的端口
+</span><span class="c1"></span>            <span class="n">Registry</span> <span class="n">registry</span> <span class="o">=</span> <span class="n">LocateRegistry</span><span class="o">.</span><span class="na">createRegistry</span><span class="o">(</span><span class="n">2333</span><span class="o">);</span>
+            <span class="n">registry</span><span class="o">.</span><span class="na">bind</span><span class="o">(</span><span class="s">&#34;test&#34;</span><span class="o">,</span>  <span class="k">new</span> <span class="n">GreetServiceImpl</span><span class="o">());</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&#34;server is ready&#34;</span><span class="o">);</span>
+
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>Client.java  连接文件：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kn">package</span> <span class="nn">com.jd.rmidemo.main</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">com.jd.rmidemo.service.GreetService</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">java.rmi.registry.LocateRegistry</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">java.rmi.registry.Registry</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">Client</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+
+            <span class="n">Registry</span> <span class="n">registry</span> <span class="o">=</span> <span class="n">LocateRegistry</span><span class="o">.</span><span class="na">getRegistry</span><span class="o">(</span><span class="s">&#34;Server服务器IP&#34;</span><span class="o">,</span><span class="n">2333</span><span class="o">);</span>
+
+            <span class="c1">// 注册列表
+</span><span class="c1"></span>            <span class="k">for</span><span class="o">(</span><span class="n">String</span> <span class="n">v</span> <span class="o">:</span> <span class="n">registry</span><span class="o">.</span><span class="na">list</span><span class="o">()){</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">v</span><span class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="n">GreetService</span> <span class="n">greetService</span> <span class="o">=</span> <span class="o">(</span><span class="n">GreetService</span><span class="o">)</span><span class="n">registry</span><span class="o">.</span><span class="na">lookup</span><span class="o">(</span><span class="s">&#34;test&#34;</span><span class="o">);</span>  <span class="c1">//注：通过接口拿
+</span><span class="c1"></span>            <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="n">greetService</span><span class="o">.</span><span class="na">sayHello</span><span class="o">(</span><span class="s">&#34;Jobs&#34;</span><span class="o">));</span>
+
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>为什么网上很多demo都跑不成功呢？  其中最大的问题是hostname原因，因为：</p>
+
+<hr />
+
+<blockquote>
+<p>客户端程序向服务端请求一个对象的时候，返回的stub对象里面包含了服务器的hostname，客户端的后续操作根据这个hostname来连接服务器端。
+网上执行rmiregistry命令 起到的作用只是为了方便client获取到stub对象，如果还有其他的方法让client拿到stub就不需要RMIRegistry 了，因为client一旦拿到了stub就不需要RMIRegistry了，如上，我们的LocateRegistry.createRegistry就已经完成这步骤操作了。</p>
+</blockquote>
+
+<p>如果你的Server.java部署在远程服务器，那么需要手动指定 java.rmi.server.hostname=， 例：
+java -Djava.rmi.server.hostname=118.24.75.130 -jar rmidemo.jar</p>
+
+<h3 id="参考文章">参考文章：</h3>
+
+<ol>
+<li><a href="https://blog.csdn.net/chenchaofuck1/article/details/51558995/">https://blog.csdn.net/chenchaofuck1/article/details/51558995/</a></li>
+<li><a href="https://www.jianshu.com/p/2c78554a3f36">https://www.jianshu.com/p/2c78554a3f36</a></li>
+</ol>
+
+    </article>
+
+    
+<ul class="article-share">
+  <li>
+    <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a> <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+  </li>
+  <li>
+    <div class="fb-share-button" data-href="https://dean2021.github.io/posts/java-rmi/" data-layout="button_count" data-action="like" data-size="small" data-show-faces="true" data-share="true"></div>
+    <div id="fb-root"></div>
+    <script>(function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1&version=v2.10";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));</script>
+  </li>
+  <li>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <g:plus action="share"></g:plus>
+  </li>
+  <li>
+    <a href="http://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="en" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </li>
+  <li>
+    <a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a>
+    <script>!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+  </li>
+</ul>
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer pager-noitem">&lt; Newer</li>
+      <li class="pager-older">
+        <a href="/posts/my-first-post/" data-toggle="tooltip" data-placement="top" title="My First Post">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2018 Dean</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-about"><a href="/about/" title="About">About</a></li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a> and <a href="https://github.com/taikii/whiteplain">Whiteplain</a>
+  </div>
+</div>
+
+
+</body>
+</html>

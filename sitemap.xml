@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  
+  <url>
+    <loc>https://dean2021.github.io/posts/java-rmi/</loc>
+    <lastmod>2018-11-06T19:19:22+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/posts/my-first-post/</loc>
+    <lastmod>2018-11-06T18:45:40+08:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/about/</loc>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/archives/</loc>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/categorie/</loc>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/</loc>
+    <lastmod>2018-11-06T19:19:22+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/categories/java/</loc>
+    <lastmod>2018-11-06T19:19:22+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/tags/java/</loc>
+    <lastmod>2018-11-06T19:19:22+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/posts/</loc>
+    <lastmod>2018-11-06T19:19:22+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/tags/rmi/</loc>
+    <lastmod>2018-11-06T19:19:22+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/series/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/tags/</loc>
+    <lastmod>2018-11-06T19:19:22+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>
