@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>&amp;copy; Copyright 2018 Dean</copyright>
-    <lastBuildDate>Tue, 06 Nov 2018 20:55:35 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 15 Nov 2018 15:14:31 +0800</lastBuildDate>
     
 	<atom:link href="https://dean2021.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>2018年-研究计划清单</title>
+      <link>https://dean2021.github.io/posts/plan/</link>
+      <pubDate>Thu, 15 Nov 2018 15:14:31 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/plan/</guid>
+      <description>参考文献中标记删除线表示已阅读完, 清单会不断Update.
+ 一、自动化Java 0day挖掘方向  涉及到技术栈:Java Instrumentation、</description>
+    </item>
     
     <item>
       <title>Golang投毒小技巧</title>
