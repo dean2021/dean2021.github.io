@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Struts2 on Dean&#39;s blog</title>
+    <link>https://dean2021.github.io/tags/struts2/</link>
+    <description>Recent content in Struts2 on Dean&#39;s blog</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>&amp;copy; Copyright 2018 Dean</copyright>
+    <lastBuildDate>Wed, 21 Nov 2018 16:37:29 +0800</lastBuildDate>
+    
+	<atom:link href="https://dean2021.github.io/tags/struts2/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>[经典回顾] S2-045漏洞的一些分析细节</title>
+      <link>https://dean2021.github.io/posts/s2-045/</link>
+      <pubDate>Wed, 21 Nov 2018 16:37:29 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/s2-045/</guid>
+      <description>0x01、为什么网上的s2-045漏洞分析文章和本地代码对不上？ 原因是由于版本不对：
+2.3.5 ~ 2.3.31 版本，漏洞出现位置： org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest类中的buildErrorMessage方法里，97行调用了LocalizedTextUtil.findText 2.5 ~ 2.</description>
+    </item>
+    
+  </channel>
+</rss>
