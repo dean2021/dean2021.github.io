@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>&amp;copy; Copyright 2018 Dean</copyright>
-    <lastBuildDate>Wed, 21 Nov 2018 16:37:29 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 23 Nov 2018 15:05:04 +0800</lastBuildDate>
     
 	<atom:link href="https://dean2021.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>《Struts2 技术内幕》读书笔记: Struts2 概况</title>
+      <link>https://dean2021.github.io/posts/struts2-internals-readbook-note/</link>
+      <pubDate>Fri, 23 Nov 2018 15:05:04 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/struts2-internals-readbook-note/</guid>
+      <description>Struts2和Struts1.x有什么区别？ 他们各自发展轨迹又如何?  Struts1是Apache社区在2000年3月31号发布的一款javaweb框架. 随着时代进步,Struts1的不足显而易见,此时Opensymphony开源了一款优秀的web框架,名为Webwork2. Apache社区在2005年12月14日宣布Struts项目和Webwork2项目合并，推出名为Struts2的Web框架. Strus2框架开始进入辉煌时代.  Struts2依赖于那些核心技术？  表示层技术, Struts2表示层主要是整合, 如整合Freemarker或Velocity为核心的模板技术、构建Flash应用的Flex技术、ajax技术等,以plugin形式进行整合.</description>
+    </item>
     
     <item>
       <title>[经典回顾] S2-045漏洞的一些分析细节</title>
