@@ -3,6 +3,11 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
+    <loc>https://dean2021.github.io/posts/struts2-internals-readbook-note_03/</loc>
+    <lastmod>2018-11-23T16:55:20+08:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://dean2021.github.io/posts/struts2-internals-readbook-note_02/</loc>
     <lastmod>2018-11-23T16:55:20+08:00</lastmod>
   </url>
