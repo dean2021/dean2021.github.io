@@ -7,10 +7,19 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>&amp;copy; Copyright 2018 Dean</copyright>
-    <lastBuildDate>Fri, 23 Nov 2018 16:55:20 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 05 Dec 2018 14:27:19 +0800</lastBuildDate>
     
 	<atom:link href="https://dean2021.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>《Struts2 技术内幕》读书笔记: 深入XWork设计原理</title>
+      <link>https://dean2021.github.io/posts/struts2-internals-readbook-note_04/</link>
+      <pubDate>Wed, 05 Dec 2018 14:27:19 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/struts2-internals-readbook-note_04/</guid>
+      <description>0x01 基于人机交互的请求响应模式主要由哪三大要素构成 ？  沟通协议 请求内容 相应内容  0x02 在Java语言中 ，有哪三种主要的请求响应的实现模式 ？  参数-返回（Param-Return）模式.</description>
+    </item>
     
     <item>
       <title>《Struts2 技术内幕》读书笔记: OGNL</title>
