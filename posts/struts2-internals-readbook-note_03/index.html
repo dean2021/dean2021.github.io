@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <title>《Struts2 技术内幕》读书笔记: OGNL - Dean&#39;s notes</title>
-  <meta property="og:title" content="《Struts2 技术内幕》读书笔记: OGNL - Dean&#39;s notes" />
-  <meta name="twitter:title" content="《Struts2 技术内幕》读书笔记: OGNL - Dean&#39;s notes" />
+  <title>深入理解OGNL - Dean&#39;s notes</title>
+  <meta property="og:title" content="深入理解OGNL - Dean&#39;s notes" />
+  <meta name="twitter:title" content="深入理解OGNL - Dean&#39;s notes" />
   <meta name="description" content="OGNL是Object-Graph Navigation Language的缩写，它是一种功能强大的表达式语言，通过它简单一致的表达式语法，可以存取对象的任意属性，调用对象的方法，遍历整个对象的结构图，实现字段类型转化等功能。它使用相同的表达式去存取对象的属性。
  0x01 为什么要引入表达式引擎 ？表达式引擎在Web开发中有什么重要作用 ？  同一个对象 ，在 “弱类型 ”的平台和一个 “强类型 ”的平台之间交互 ，就必须有一个非常重要的 “翻译 ”角色解决这种 “不匹配 ” 。这个角色 ，就是我们所说的表达式引擎 ，它充当着桥梁作用 ，保证数据能够顺利地在MVC的各个层次进行流转 。  0x02 一个合格的表达式语言应该具备什么？  能够处理表达式与对象之间的映射关系，并且这种关系是双向的。 能够支持丰富多样的表达式语法计算。 能够支持必要的数据类型转换.">
   <meta property="og:description" content="OGNL是Object-Graph Navigation Language的缩写，它是一种功能强大的表达式语言，通过它简单一致的表达式语法，可以存取对象的任意属性，调用对象的方法，遍历整个对象的结构图，实现字段类型转化等功能。它使用相同的表达式去存取对象的属性。
@@ -38,6 +38,7 @@
       <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
       <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
       <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-books"><a href="/books/" title="Books">Books</a></li>
       <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
     </ul>
   </nav>
@@ -48,11 +49,29 @@
     <article class="article">
       
       
-      <h1 class="article-title">《Struts2 技术内幕》读书笔记: OGNL</h1>
+      <h1 class="article-title">深入理解OGNL</h1>
       
       <hr class="article-title-bottom">
       <ul class="article-meta">
         <li class="article-meta-date"><time>November 23, 2018</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/java/">
+            <i class="fas fa-folder"></i>
+            java
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-categories">
+          <a href="/categories/struts2-%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95/">
+            <i class="fas fa-folder"></i>
+            Struts2 技术内幕
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">
+            <i class="fas fa-tag"></i>
+            读书笔记
+          </a>&nbsp;
+        </li>
       </ul>
       
 <aside class="toc">
@@ -2818,14 +2837,31 @@
 </div>
     </article>
 
-    
+      <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+var gitalk = new Gitalk({
+  clientID: '2f61b9423ddfde01f318',
+  clientSecret: 'ae6360004775eb79f1069c0ea047f2fcd0f8cfc7',
+  repo: 'dean2021.github.io',
+  owner: 'dean2021',
+  admin: ['dean2021'],
+  id: location.pathname,      
+  distractionFreeMode: false  
+})
+
+gitalk.render('gitalk-container')
+  </script>
+
+
 
     <ul class="pager article-pager">
       <li class="pager-newer">
-          <a href="/posts/struts2-internals-readbook-note_04/" data-toggle="tooltip" data-placement="top" title="《Struts2 技术内幕》读书笔记: 深入XWork设计原理">&lt; Newer</a>
+          <a href="/posts/struts2-internals-readbook-note_02/" data-toggle="tooltip" data-placement="top" title="XWork框架中的容器设计">&lt; Newer</a>
       </li>
       <li class="pager-older">
-        <a href="/posts/struts2-internals-readbook-note_02/" data-toggle="tooltip" data-placement="top" title="《Struts2 技术内幕》读书笔记: XWork中的容器">Older &gt;</a>
+        <a href="/posts/struts2-internals-readbook-note/" data-toggle="tooltip" data-placement="top" title="Struts2框架源码分析:概况">Older &gt;</a>
       </li>
     </ul>
   </div>

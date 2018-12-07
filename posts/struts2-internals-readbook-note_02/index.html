@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <title>《Struts2 技术内幕》读书笔记: XWork中的容器 - Dean&#39;s notes</title>
-  <meta property="og:title" content="《Struts2 技术内幕》读书笔记: XWork中的容器 - Dean&#39;s notes" />
-  <meta name="twitter:title" content="《Struts2 技术内幕》读书笔记: XWork中的容器 - Dean&#39;s notes" />
+  <title>XWork框架中的容器设计 - Dean&#39;s notes</title>
+  <meta property="og:title" content="XWork框架中的容器设计 - Dean&#39;s notes" />
+  <meta name="twitter:title" content="XWork框架中的容器设计 - Dean&#39;s notes" />
   <meta name="description" content="&ldquo;容器&rdquo;是用来解决：“在程序的运行期，应该如何创建我们需要的对象？” 和 &ldquo;当创建新对象，该对象依赖的对象也能正确被创建出来？&rdquo;
  对象的生命周期管理包含哪两个方面的内容 ？  在程序运行期，对象实例的创建和引用机制. 对象与其关联的对象的依赖关系的处理机制.">
   <meta property="og:description" content="&ldquo;容器&rdquo;是用来解决：“在程序的运行期，应该如何创建我们需要的对象？” 和 &ldquo;当创建新对象，该对象依赖的对象也能正确被创建出来？&rdquo;
@@ -38,6 +38,7 @@
       <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
       <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
       <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-books"><a href="/books/" title="Books">Books</a></li>
       <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
     </ul>
   </nav>
@@ -48,11 +49,29 @@
     <article class="article">
       
       
-      <h1 class="article-title">《Struts2 技术内幕》读书笔记: XWork中的容器</h1>
+      <h1 class="article-title">XWork框架中的容器设计</h1>
       
       <hr class="article-title-bottom">
       <ul class="article-meta">
         <li class="article-meta-date"><time>November 23, 2018</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/java/">
+            <i class="fas fa-folder"></i>
+            java
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-categories">
+          <a href="/categories/struts2-%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95/">
+            <i class="fas fa-folder"></i>
+            Struts2 技术内幕
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">
+            <i class="fas fa-tag"></i>
+            读书笔记
+          </a>&nbsp;
+        </li>
       </ul>
       
 <aside class="toc">
@@ -1137,14 +1156,31 @@
 
     </article>
 
-    
+      <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+var gitalk = new Gitalk({
+  clientID: '2f61b9423ddfde01f318',
+  clientSecret: 'ae6360004775eb79f1069c0ea047f2fcd0f8cfc7',
+  repo: 'dean2021.github.io',
+  owner: 'dean2021',
+  admin: ['dean2021'],
+  id: location.pathname,      
+  distractionFreeMode: false  
+})
+
+gitalk.render('gitalk-container')
+  </script>
+
+
 
     <ul class="pager article-pager">
       <li class="pager-newer">
-          <a href="/posts/struts2-internals-readbook-note_03/" data-toggle="tooltip" data-placement="top" title="《Struts2 技术内幕》读书笔记: OGNL">&lt; Newer</a>
+          <a href="/posts/struts2-internals-readbook-note_04/" data-toggle="tooltip" data-placement="top" title="深入XWork设计原理">&lt; Newer</a>
       </li>
       <li class="pager-older">
-        <a href="/posts/struts2-internals-readbook-note/" data-toggle="tooltip" data-placement="top" title="《Struts2 技术内幕》读书笔记: Struts2 概况">Older &gt;</a>
+        <a href="/posts/struts2-internals-readbook-note_03/" data-toggle="tooltip" data-placement="top" title="深入理解OGNL">Older &gt;</a>
       </li>
     </ul>
   </div>
