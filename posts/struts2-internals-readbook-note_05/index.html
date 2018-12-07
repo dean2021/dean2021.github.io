@@ -6,12 +6,9 @@
   <title>XWork框架的元素详解 - Dean&#39;s notes</title>
   <meta property="og:title" content="XWork框架的元素详解 - Dean&#39;s notes" />
   <meta name="twitter:title" content="XWork框架的元素详解 - Dean&#39;s notes" />
-  <meta name="description" content="纸上得来终觉浅, 预知此事要躬行
- 0x01 构成XWork数据流体系的两大元素之间有什么样的关系 ？  ActionContext 和 ValueStack之间是从属关系, ValueStack是ActionContext的一个组成部分.">
-  <meta property="og:description" content="纸上得来终觉浅, 预知此事要躬行
- 0x01 构成XWork数据流体系的两大元素之间有什么样的关系 ？  ActionContext 和 ValueStack之间是从属关系, ValueStack是ActionContext的一个组成部分.">
-  <meta name="twitter:description" content="纸上得来终觉浅, 预知此事要躬行
- 0x01 构成XWork数据流体系的两大元素之间有什么样的关系 ？  ActionContext 和 ValueStack之间是从属关系, ValueStack是ActionContext的一个组成部分.">
+  <meta name="description" content="0x01 构成XWork数据流体系的两大元素之间有什么样的关系 ？  ActionContext 和 ValueStack之间是从属关系, ValueStack是ActionContext的一个组成部分.  实现代码:">
+  <meta property="og:description" content="0x01 构成XWork数据流体系的两大元素之间有什么样的关系 ？  ActionContext 和 ValueStack之间是从属关系, ValueStack是ActionContext的一个组成部分.  实现代码:">
+  <meta name="twitter:description" content="0x01 构成XWork数据流体系的两大元素之间有什么样的关系 ？  ActionContext 和 ValueStack之间是从属关系, ValueStack是ActionContext的一个组成部分.  实现代码:">
   <meta name="author" content="Dean"/>
   <meta property="og:site_name" content="Dean&#39;s notes" />
   <meta property="og:url" content="https://dean2021.github.io/posts/struts2-internals-readbook-note_05/" />
@@ -74,33 +71,8 @@
         </li>
       </ul>
       
-<aside class="toc">
-  <nav id="TableOfContents">
-<ul>
-<li>
-<ul>
-<li>
-<ul>
-<li><a href="#0x01-构成xwork数据流体系的两大元素之间有什么样的关系">0x01 构成XWork数据流体系的两大元素之间有什么样的关系 ？</a></li>
-<li><a href="#0x02-什么是事件处理节点-什么是事件处理驱动元素">0x02 什么是事件处理节点 ？什么是事件处理驱动元素 ？</a></li>
-<li><a href="#0x03-如何理解action对象与interceptor对象之间的关系">0x03 如何理解Action对象与Interceptor对象之间的关系 ？</a></li>
-<li><a href="#0x04-actioncontext有哪两大职责">0x04 ActionContext有哪两大职责 ？</a></li>
-<li><a href="#0x05-什么是-valuestack-valuestack对ognl表达式的计算有什么样的影响">0x05 什么是 ValueStack？  ValueStack对OGNL表达式的计算有什么样的影响 ？</a></li>
-<li><a href="#0x06-作为核心响应类的-a-c-t-i-o-n与传统-s-e-r-v-l-e-t实现模式下的响应类有什么区别">0x06 作为核心响应类的 A c t i o n与传统 S e r v l e t实现模式下的响应类有什么区别 ？</a></li>
-<li><a href="#0x07-什么是执行栈-a-c-t-i-o-n-i-n-v-o-c-a-t-i-o-n对于执行栈是如何进行调度的">0x07 什么是执行栈 ？ A c t i o n I n v o c a t i o n对于执行栈是如何进行调度的 ？</a></li>
-<li><a href="#0x08-a-c-t-i-o-n-p-r-o-x-y在整个-x-w-o-r-k框架中起什么作用">0x08 A c t i o n P r o x y在整个 X W o r k框架中起什么作用 ？</a></li>
-<li><a href="#0x09-控制流体系与数据流体系是如何进行交互的">0x09 控制流体系与数据流体系是如何进行交互的 ？</a></li>
-<li><a href="#0x010-a-c-t-i-o-n的交互体系主要分为哪三个方面">0x010 A c t i o n的交互体系主要分为哪三个方面 ？</a></li>
-</ul></li>
-</ul></li>
-</ul>
-</nav>
-</aside>
-      
 
-<blockquote>
-<p>纸上得来终觉浅, 预知此事要躬行</p>
-</blockquote>
+      
 
 <h3 id="0x01-构成xwork数据流体系的两大元素之间有什么样的关系">0x01 构成XWork数据流体系的两大元素之间有什么样的关系 ？</h3>
 
@@ -905,17 +877,959 @@
 
 <ol>
 <li>ValueStack是XWork对OGNL的计算进行扩展的一个特殊的数据结构， 主要是对OGNL三要素中的Root对象进行扩展.</li>
+<li>ValueStack是一个接口，OgnlValueStack是对其的实现。</li>
 </ol>
 
-<h3 id="0x06-作为核心响应类的-a-c-t-i-o-n与传统-s-e-r-v-l-e-t实现模式下的响应类有什么区别">0x06 作为核心响应类的 A c t i o n与传统 S e r v l e t实现模式下的响应类有什么区别 ？</h3>
+<p>OgnlValueStack 的代码实现：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">  1
+</span><span class="lnt">  2
+</span><span class="lnt">  3
+</span><span class="lnt">  4
+</span><span class="lnt">  5
+</span><span class="lnt">  6
+</span><span class="lnt">  7
+</span><span class="lnt">  8
+</span><span class="lnt">  9
+</span><span class="lnt"> 10
+</span><span class="lnt"> 11
+</span><span class="lnt"> 12
+</span><span class="lnt"> 13
+</span><span class="lnt"> 14
+</span><span class="lnt"> 15
+</span><span class="lnt"> 16
+</span><span class="lnt"> 17
+</span><span class="lnt"> 18
+</span><span class="lnt"> 19
+</span><span class="lnt"> 20
+</span><span class="lnt"> 21
+</span><span class="lnt"> 22
+</span><span class="lnt"> 23
+</span><span class="lnt"> 24
+</span><span class="lnt"> 25
+</span><span class="lnt"> 26
+</span><span class="lnt"> 27
+</span><span class="lnt"> 28
+</span><span class="lnt"> 29
+</span><span class="lnt"> 30
+</span><span class="lnt"> 31
+</span><span class="lnt"> 32
+</span><span class="lnt"> 33
+</span><span class="lnt"> 34
+</span><span class="lnt"> 35
+</span><span class="lnt"> 36
+</span><span class="lnt"> 37
+</span><span class="lnt"> 38
+</span><span class="lnt"> 39
+</span><span class="lnt"> 40
+</span><span class="lnt"> 41
+</span><span class="lnt"> 42
+</span><span class="lnt"> 43
+</span><span class="lnt"> 44
+</span><span class="lnt"> 45
+</span><span class="lnt"> 46
+</span><span class="lnt"> 47
+</span><span class="lnt"> 48
+</span><span class="lnt"> 49
+</span><span class="lnt"> 50
+</span><span class="lnt"> 51
+</span><span class="lnt"> 52
+</span><span class="lnt"> 53
+</span><span class="lnt"> 54
+</span><span class="lnt"> 55
+</span><span class="lnt"> 56
+</span><span class="lnt"> 57
+</span><span class="lnt"> 58
+</span><span class="lnt"> 59
+</span><span class="lnt"> 60
+</span><span class="lnt"> 61
+</span><span class="lnt"> 62
+</span><span class="lnt"> 63
+</span><span class="lnt"> 64
+</span><span class="lnt"> 65
+</span><span class="lnt"> 66
+</span><span class="lnt"> 67
+</span><span class="lnt"> 68
+</span><span class="lnt"> 69
+</span><span class="lnt"> 70
+</span><span class="lnt"> 71
+</span><span class="lnt"> 72
+</span><span class="lnt"> 73
+</span><span class="lnt"> 74
+</span><span class="lnt"> 75
+</span><span class="lnt"> 76
+</span><span class="lnt"> 77
+</span><span class="lnt"> 78
+</span><span class="lnt"> 79
+</span><span class="lnt"> 80
+</span><span class="lnt"> 81
+</span><span class="lnt"> 82
+</span><span class="lnt"> 83
+</span><span class="lnt"> 84
+</span><span class="lnt"> 85
+</span><span class="lnt"> 86
+</span><span class="lnt"> 87
+</span><span class="lnt"> 88
+</span><span class="lnt"> 89
+</span><span class="lnt"> 90
+</span><span class="lnt"> 91
+</span><span class="lnt"> 92
+</span><span class="lnt"> 93
+</span><span class="lnt"> 94
+</span><span class="lnt"> 95
+</span><span class="lnt"> 96
+</span><span class="lnt"> 97
+</span><span class="lnt"> 98
+</span><span class="lnt"> 99
+</span><span class="lnt">100
+</span><span class="lnt">101
+</span><span class="lnt">102
+</span><span class="lnt">103
+</span><span class="lnt">104
+</span><span class="lnt">105
+</span><span class="lnt">106
+</span><span class="lnt">107
+</span><span class="lnt">108
+</span><span class="lnt">109
+</span><span class="lnt">110
+</span><span class="lnt">111
+</span><span class="lnt">112
+</span><span class="lnt">113
+</span><span class="lnt">114
+</span><span class="lnt">115
+</span><span class="lnt">116
+</span><span class="lnt">117
+</span><span class="lnt">118
+</span><span class="lnt">119
+</span><span class="lnt">120
+</span><span class="lnt">121
+</span><span class="lnt">122
+</span><span class="lnt">123
+</span><span class="lnt">124
+</span><span class="lnt">125
+</span><span class="lnt">126
+</span><span class="lnt">127
+</span><span class="lnt">128
+</span><span class="lnt">129
+</span><span class="lnt">130
+</span><span class="lnt">131
+</span><span class="lnt">132
+</span><span class="lnt">133
+</span><span class="lnt">134
+</span><span class="lnt">135
+</span><span class="lnt">136
+</span><span class="lnt">137
+</span><span class="lnt">138
+</span><span class="lnt">139
+</span><span class="lnt">140
+</span><span class="lnt">141
+</span><span class="lnt">142
+</span><span class="lnt">143
+</span><span class="lnt">144
+</span><span class="lnt">145
+</span><span class="lnt">146
+</span><span class="lnt">147
+</span><span class="lnt">148
+</span><span class="lnt">149
+</span><span class="lnt">150
+</span><span class="lnt">151
+</span><span class="lnt">152
+</span><span class="lnt">153
+</span><span class="lnt">154
+</span><span class="lnt">155
+</span><span class="lnt">156
+</span><span class="lnt">157
+</span><span class="lnt">158
+</span><span class="lnt">159
+</span><span class="lnt">160
+</span><span class="lnt">161
+</span><span class="lnt">162
+</span><span class="lnt">163
+</span><span class="lnt">164
+</span><span class="lnt">165
+</span><span class="lnt">166
+</span><span class="lnt">167
+</span><span class="lnt">168
+</span><span class="lnt">169
+</span><span class="lnt">170
+</span><span class="lnt">171
+</span><span class="lnt">172
+</span><span class="lnt">173
+</span><span class="lnt">174
+</span><span class="lnt">175
+</span><span class="lnt">176
+</span><span class="lnt">177
+</span><span class="lnt">178
+</span><span class="lnt">179
+</span><span class="lnt">180
+</span><span class="lnt">181
+</span><span class="lnt">182
+</span><span class="lnt">183
+</span><span class="lnt">184
+</span><span class="lnt">185
+</span><span class="lnt">186
+</span><span class="lnt">187
+</span><span class="lnt">188
+</span><span class="lnt">189
+</span><span class="lnt">190
+</span><span class="lnt">191
+</span><span class="lnt">192
+</span><span class="lnt">193
+</span><span class="lnt">194
+</span><span class="lnt">195
+</span><span class="lnt">196
+</span><span class="lnt">197
+</span><span class="lnt">198
+</span><span class="lnt">199
+</span><span class="lnt">200
+</span><span class="lnt">201
+</span><span class="lnt">202
+</span><span class="lnt">203
+</span><span class="lnt">204
+</span><span class="lnt">205
+</span><span class="lnt">206
+</span><span class="lnt">207
+</span><span class="lnt">208
+</span><span class="lnt">209
+</span><span class="lnt">210
+</span><span class="lnt">211
+</span><span class="lnt">212
+</span><span class="lnt">213
+</span><span class="lnt">214
+</span><span class="lnt">215
+</span><span class="lnt">216
+</span><span class="lnt">217
+</span><span class="lnt">218
+</span><span class="lnt">219
+</span><span class="lnt">220
+</span><span class="lnt">221
+</span><span class="lnt">222
+</span><span class="lnt">223
+</span><span class="lnt">224
+</span><span class="lnt">225
+</span><span class="lnt">226
+</span><span class="lnt">227
+</span><span class="lnt">228
+</span><span class="lnt">229
+</span><span class="lnt">230
+</span><span class="lnt">231
+</span><span class="lnt">232
+</span><span class="lnt">233
+</span><span class="lnt">234
+</span><span class="lnt">235
+</span><span class="lnt">236
+</span><span class="lnt">237
+</span><span class="lnt">238
+</span><span class="lnt">239
+</span><span class="lnt">240
+</span><span class="lnt">241
+</span><span class="lnt">242
+</span><span class="lnt">243
+</span><span class="lnt">244
+</span><span class="lnt">245
+</span><span class="lnt">246
+</span><span class="lnt">247
+</span><span class="lnt">248
+</span><span class="lnt">249
+</span><span class="lnt">250
+</span><span class="lnt">251
+</span><span class="lnt">252
+</span><span class="lnt">253
+</span><span class="lnt">254
+</span><span class="lnt">255
+</span><span class="lnt">256
+</span><span class="lnt">257
+</span><span class="lnt">258
+</span><span class="lnt">259
+</span><span class="lnt">260
+</span><span class="lnt">261
+</span><span class="lnt">262
+</span><span class="lnt">263
+</span><span class="lnt">264
+</span><span class="lnt">265
+</span><span class="lnt">266
+</span><span class="lnt">267
+</span><span class="lnt">268
+</span><span class="lnt">269
+</span><span class="lnt">270
+</span><span class="lnt">271
+</span><span class="lnt">272
+</span><span class="lnt">273
+</span><span class="lnt">274
+</span><span class="lnt">275
+</span><span class="lnt">276
+</span><span class="lnt">277
+</span><span class="lnt">278
+</span><span class="lnt">279
+</span><span class="lnt">280
+</span><span class="lnt">281
+</span><span class="lnt">282
+</span><span class="lnt">283
+</span><span class="lnt">284
+</span><span class="lnt">285
+</span><span class="lnt">286
+</span><span class="lnt">287
+</span><span class="lnt">288
+</span><span class="lnt">289
+</span><span class="lnt">290
+</span><span class="lnt">291
+</span><span class="lnt">292
+</span><span class="lnt">293
+</span><span class="lnt">294
+</span><span class="lnt">295
+</span><span class="lnt">296
+</span><span class="lnt">297
+</span><span class="lnt">298
+</span><span class="lnt">299
+</span><span class="lnt">300
+</span><span class="lnt">301
+</span><span class="lnt">302
+</span><span class="lnt">303
+</span><span class="lnt">304
+</span><span class="lnt">305
+</span><span class="lnt">306
+</span><span class="lnt">307
+</span><span class="lnt">308
+</span><span class="lnt">309
+</span><span class="lnt">310
+</span><span class="lnt">311
+</span><span class="lnt">312
+</span><span class="lnt">313
+</span><span class="lnt">314
+</span><span class="lnt">315
+</span><span class="lnt">316
+</span><span class="lnt">317
+</span><span class="lnt">318
+</span><span class="lnt">319
+</span><span class="lnt">320
+</span><span class="lnt">321
+</span><span class="lnt">322
+</span><span class="lnt">323
+</span><span class="lnt">324
+</span><span class="lnt">325
+</span><span class="lnt">326
+</span><span class="lnt">327
+</span><span class="lnt">328
+</span><span class="lnt">329
+</span><span class="lnt">330
+</span><span class="lnt">331
+</span><span class="lnt">332
+</span><span class="lnt">333
+</span><span class="lnt">334
+</span><span class="lnt">335
+</span><span class="lnt">336
+</span><span class="lnt">337
+</span><span class="lnt">338
+</span><span class="lnt">339
+</span><span class="lnt">340
+</span><span class="lnt">341
+</span><span class="lnt">342
+</span><span class="lnt">343
+</span><span class="lnt">344
+</span><span class="lnt">345
+</span><span class="lnt">346
+</span><span class="lnt">347
+</span><span class="lnt">348
+</span><span class="lnt">349
+</span><span class="lnt">350
+</span><span class="lnt">351
+</span><span class="lnt">352
+</span><span class="lnt">353
+</span><span class="lnt">354
+</span><span class="lnt">355
+</span><span class="lnt">356
+</span><span class="lnt">357
+</span><span class="lnt">358
+</span><span class="lnt">359
+</span><span class="lnt">360
+</span><span class="lnt">361
+</span><span class="lnt">362
+</span><span class="lnt">363
+</span><span class="lnt">364
+</span><span class="lnt">365
+</span><span class="lnt">366
+</span><span class="lnt">367
+</span><span class="lnt">368
+</span><span class="lnt">369
+</span><span class="lnt">370
+</span><span class="lnt">371
+</span><span class="lnt">372
+</span><span class="lnt">373
+</span><span class="lnt">374
+</span><span class="lnt">375
+</span><span class="lnt">376
+</span><span class="lnt">377
+</span><span class="lnt">378
+</span><span class="lnt">379
+</span><span class="lnt">380
+</span><span class="lnt">381
+</span><span class="lnt">382
+</span><span class="lnt">383
+</span><span class="lnt">384
+</span><span class="lnt">385
+</span><span class="lnt">386
+</span><span class="lnt">387
+</span><span class="lnt">388
+</span><span class="lnt">389
+</span><span class="lnt">390
+</span><span class="lnt">391
+</span><span class="lnt">392
+</span><span class="lnt">393
+</span><span class="lnt">394
+</span><span class="lnt">395
+</span><span class="lnt">396
+</span><span class="lnt">397
+</span><span class="lnt">398
+</span><span class="lnt">399
+</span><span class="lnt">400
+</span><span class="lnt">401
+</span><span class="lnt">402
+</span><span class="lnt">403
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">OgnlValueStack</span> <span class="kd">implements</span> <span class="n">Serializable</span><span class="o">,</span> <span class="n">ValueStack</span><span class="o">,</span> <span class="n">ClearableValueStack</span><span class="o">,</span> <span class="n">MemberAccessValueStack</span> <span class="o">{</span>
 
-<h3 id="0x07-什么是执行栈-a-c-t-i-o-n-i-n-v-o-c-a-t-i-o-n对于执行栈是如何进行调度的">0x07 什么是执行栈 ？ A c t i o n I n v o c a t i o n对于执行栈是如何进行调度的 ？</h3>
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">THROW_EXCEPTION_ON_FAILURE</span> <span class="o">=</span> <span class="n">OgnlValueStack</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;.throwExceptionOnFailure&#34;</span><span class="o">;</span>
 
-<h3 id="0x08-a-c-t-i-o-n-p-r-o-x-y在整个-x-w-o-r-k框架中起什么作用">0x08 A c t i o n P r o x y在整个 X W o r k框架中起什么作用 ？</h3>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="kt">long</span> <span class="n">serialVersionUID</span> <span class="o">=</span> <span class="n">370737852934925530L</span><span class="o">;</span>
 
-<h3 id="0x09-控制流体系与数据流体系是如何进行交互的">0x09 控制流体系与数据流体系是如何进行交互的 ？</h3>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">String</span> <span class="n">MAP_IDENTIFIER_KEY</span> <span class="o">=</span> <span class="s">&#34;com.opensymphony.xwork2.util.OgnlValueStack.MAP_IDENTIFIER_KEY&#34;</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Logger</span> <span class="n">LOG</span> <span class="o">=</span> <span class="n">LoggerFactory</span><span class="o">.</span><span class="na">getLogger</span><span class="o">(</span><span class="n">OgnlValueStack</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
 
-<h3 id="0x010-a-c-t-i-o-n的交互体系主要分为哪三个方面">0x010 A c t i o n的交互体系主要分为哪三个方面 ？</h3>
+    <span class="n">CompoundRoot</span> <span class="n">root</span><span class="o">;</span>
+    <span class="kd">transient</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">context</span><span class="o">;</span>
+    <span class="n">Class</span> <span class="n">defaultType</span><span class="o">;</span>
+    <span class="n">Map</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">overrides</span><span class="o">;</span>
+    <span class="kd">transient</span> <span class="n">OgnlUtil</span> <span class="n">ognlUtil</span><span class="o">;</span>
+    <span class="kd">transient</span> <span class="n">SecurityMemberAccess</span> <span class="n">securityMemberAccess</span><span class="o">;</span>
+
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">devMode</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">logMissingProperties</span><span class="o">;</span>
+
+    <span class="kd">protected</span> <span class="nf">OgnlValueStack</span><span class="o">(</span><span class="n">XWorkConverter</span> <span class="n">xworkConverter</span><span class="o">,</span> <span class="n">CompoundRootAccessor</span> <span class="n">accessor</span><span class="o">,</span> <span class="n">TextProvider</span> <span class="n">prov</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">allowStaticAccess</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">setRoot</span><span class="o">(</span><span class="n">xworkConverter</span><span class="o">,</span> <span class="n">accessor</span><span class="o">,</span> <span class="k">new</span> <span class="n">CompoundRoot</span><span class="o">(),</span> <span class="n">allowStaticAccess</span><span class="o">);</span>
+        <span class="n">push</span><span class="o">(</span><span class="n">prov</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="nf">OgnlValueStack</span><span class="o">(</span><span class="n">ValueStack</span> <span class="n">vs</span><span class="o">,</span> <span class="n">XWorkConverter</span> <span class="n">xworkConverter</span><span class="o">,</span> <span class="n">CompoundRootAccessor</span> <span class="n">accessor</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">allowStaticAccess</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">setRoot</span><span class="o">(</span><span class="n">xworkConverter</span><span class="o">,</span> <span class="n">accessor</span><span class="o">,</span> <span class="k">new</span> <span class="n">CompoundRoot</span><span class="o">(</span><span class="n">vs</span><span class="o">.</span><span class="na">getRoot</span><span class="o">()),</span> <span class="n">allowStaticAccess</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Inject</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setOgnlUtil</span><span class="o">(</span><span class="n">OgnlUtil</span> <span class="n">ognlUtil</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">ognlUtil</span> <span class="o">=</span> <span class="n">ognlUtil</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setRoot</span><span class="o">(</span><span class="n">XWorkConverter</span> <span class="n">xworkConverter</span><span class="o">,</span> <span class="n">CompoundRootAccessor</span> <span class="n">accessor</span><span class="o">,</span> <span class="n">CompoundRoot</span> <span class="n">compoundRoot</span><span class="o">,</span>
+                           <span class="kt">boolean</span> <span class="n">allowStaticMethodAccess</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">root</span> <span class="o">=</span> <span class="n">compoundRoot</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">securityMemberAccess</span> <span class="o">=</span> <span class="k">new</span> <span class="n">SecurityMemberAccess</span><span class="o">(</span><span class="n">allowStaticMethodAccess</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">context</span> <span class="o">=</span> <span class="n">Ognl</span><span class="o">.</span><span class="na">createDefaultContext</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">root</span><span class="o">,</span> <span class="n">accessor</span><span class="o">,</span> <span class="k">new</span> <span class="n">OgnlTypeConverterWrapper</span><span class="o">(</span><span class="n">xworkConverter</span><span class="o">),</span> <span class="n">securityMemberAccess</span><span class="o">);</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">VALUE_STACK</span><span class="o">,</span> <span class="k">this</span><span class="o">);</span>
+        <span class="n">Ognl</span><span class="o">.</span><span class="na">setClassResolver</span><span class="o">(</span><span class="n">context</span><span class="o">,</span> <span class="n">accessor</span><span class="o">);</span>
+        <span class="o">((</span><span class="n">OgnlContext</span><span class="o">)</span> <span class="n">context</span><span class="o">).</span><span class="na">setTraceEvaluations</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+        <span class="o">((</span><span class="n">OgnlContext</span><span class="o">)</span> <span class="n">context</span><span class="o">).</span><span class="na">setKeepLastEvaluation</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Inject</span><span class="o">(</span><span class="s">&#34;devMode&#34;</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDevMode</span><span class="o">(</span><span class="n">String</span> <span class="n">mode</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">devMode</span> <span class="o">=</span> <span class="s">&#34;true&#34;</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="n">mode</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="nd">@Inject</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;logMissingProperties&#34;</span><span class="o">,</span> <span class="n">required</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setLogMissingProperties</span><span class="o">(</span><span class="n">String</span> <span class="n">logMissingProperties</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">logMissingProperties</span> <span class="o">=</span> <span class="s">&#34;true&#34;</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="n">logMissingProperties</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#getContext()
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="nf">getContext</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">context</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#setDefaultType(java.lang.Class)
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setDefaultType</span><span class="o">(</span><span class="n">Class</span> <span class="n">defaultType</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">defaultType</span> <span class="o">=</span> <span class="n">defaultType</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#setExprOverrides(java.util.Map)
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setExprOverrides</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">overrides</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">overrides</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">overrides</span> <span class="o">=</span> <span class="n">overrides</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">overrides</span><span class="o">.</span><span class="na">putAll</span><span class="o">(</span><span class="n">overrides</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#getExprOverrides()
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">Object</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="nf">getExprOverrides</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">overrides</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#getRoot()
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">CompoundRoot</span> <span class="nf">getRoot</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">root</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object)
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">setValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">devMode</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#setValue(java.lang.String, java.lang.Object, boolean)
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">context</span> <span class="o">=</span> <span class="n">getContext</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">trySetValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">context</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">OgnlException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">handleOgnlException</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RuntimeException</span> <span class="n">re</span><span class="o">)</span> <span class="o">{</span> <span class="c1">//XW-281
+</span><span class="c1"></span>            <span class="n">handleRuntimeException</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">re</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">cleanUpContext</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">trySetValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">context</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">OgnlException</span> <span class="o">{</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">XWorkConverter</span><span class="o">.</span><span class="na">CONVERSION_PROPERTY_FULLNAME</span><span class="o">,</span> <span class="n">expr</span><span class="o">);</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">REPORT_ERRORS_ON_NO_PROP</span><span class="o">,</span> <span class="o">(</span><span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">?</span> <span class="n">Boolean</span><span class="o">.</span><span class="na">TRUE</span> <span class="o">:</span> <span class="n">Boolean</span><span class="o">.</span><span class="na">FALSE</span><span class="o">);</span>
+        <span class="n">ognlUtil</span><span class="o">.</span><span class="na">setValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">context</span><span class="o">,</span> <span class="n">root</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">cleanUpContext</span><span class="o">(</span><span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">context</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">ReflectionContextState</span><span class="o">.</span><span class="na">clear</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">XWorkConverter</span><span class="o">.</span><span class="na">CONVERSION_PROPERTY_FULLNAME</span><span class="o">);</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">REPORT_ERRORS_ON_NO_PROP</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">handleRuntimeException</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">RuntimeException</span> <span class="n">re</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">String</span> <span class="n">message</span> <span class="o">=</span> <span class="n">ErrorMessageBuilder</span><span class="o">.</span><span class="na">create</span><span class="o">()</span>
+                    <span class="o">.</span><span class="na">errorSettingExpressionWithValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">value</span><span class="o">)</span>
+                    <span class="o">.</span><span class="na">build</span><span class="o">();</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">XWorkException</span><span class="o">(</span><span class="n">message</span><span class="o">,</span> <span class="n">re</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">LOG</span><span class="o">.</span><span class="na">isWarnEnabled</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;Error setting value&#34;</span><span class="o">,</span> <span class="n">re</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">handleOgnlException</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">OgnlException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">msg</span> <span class="o">=</span> <span class="s">&#34;Error setting expression &#39;&#34;</span> <span class="o">+</span> <span class="n">expr</span> <span class="o">+</span> <span class="s">&#34;&#39; with value &#39;&#34;</span> <span class="o">+</span> <span class="n">value</span> <span class="o">+</span> <span class="s">&#34;&#39;&#34;</span><span class="o">;</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">LOG</span><span class="o">.</span><span class="na">isWarnEnabled</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">XWorkException</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#findString(java.lang.String)
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">findString</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span> <span class="n">findValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">String</span> <span class="nf">findString</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span> <span class="n">findValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">throwExceptionOnFailure</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#findValue(java.lang.String)
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">findValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">setupExceptionOnFailure</span><span class="o">(</span><span class="n">throwExceptionOnFailure</span><span class="o">);</span>
+            <span class="k">return</span> <span class="n">tryFindValueWhenExpressionIsNotNull</span><span class="o">(</span><span class="n">expr</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">OgnlException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">handleOgnlException</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">handleOtherException</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">ReflectionContextState</span><span class="o">.</span><span class="na">clear</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">setupExceptionOnFailure</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">THROW_EXCEPTION_ON_FAILURE</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">tryFindValueWhenExpressionIsNotNull</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">OgnlException</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">expr</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">tryFindValue</span><span class="o">(</span><span class="n">expr</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">handleOtherException</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">logLookupFailure</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+
+        <span class="k">if</span> <span class="o">(</span><span class="n">throwExceptionOnFailure</span><span class="o">)</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="n">XWorkException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+
+        <span class="k">return</span> <span class="n">findInContext</span><span class="o">(</span><span class="n">expr</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">tryFindValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">OgnlException</span> <span class="o">{</span>
+        <span class="n">Object</span> <span class="n">value</span><span class="o">;</span>
+        <span class="n">expr</span> <span class="o">=</span> <span class="n">lookupForOverrides</span><span class="o">(</span><span class="n">expr</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">defaultType</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">findValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">defaultType</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">getValueUsingOgnl</span><span class="o">(</span><span class="n">expr</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">findInContext</span><span class="o">(</span><span class="n">expr</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">String</span> <span class="nf">lookupForOverrides</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">((</span><span class="n">overrides</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="n">overrides</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">expr</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">expr</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span> <span class="n">overrides</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">expr</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">expr</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">getValueUsingOgnl</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">OgnlException</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">ognlUtil</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">context</span><span class="o">,</span> <span class="n">root</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">context</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">THROW_EXCEPTION_ON_FAILURE</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">findValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">findValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#findValue(java.lang.String, java.lang.Class)
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">findValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Class</span> <span class="n">asType</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">setupExceptionOnFailure</span><span class="o">(</span><span class="n">throwExceptionOnFailure</span><span class="o">);</span>
+            <span class="k">return</span> <span class="n">tryFindValueWhenExpressionIsNotNull</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">asType</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">OgnlException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">handleOgnlException</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">handleOtherException</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">ReflectionContextState</span><span class="o">.</span><span class="na">clear</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">tryFindValueWhenExpressionIsNotNull</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Class</span> <span class="n">asType</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">OgnlException</span> <span class="o">{</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">expr</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">tryFindValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">asType</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">handleOgnlException</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">OgnlException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Object</span> <span class="n">ret</span> <span class="o">=</span> <span class="n">findInContext</span><span class="o">(</span><span class="n">expr</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">ret</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">shouldLogNoSuchPropertyWarning</span><span class="o">(</span><span class="n">e</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;Could not find property [&#34;</span> <span class="o">+</span> <span class="o">((</span><span class="n">NoSuchPropertyException</span><span class="o">)</span> <span class="n">e</span><span class="o">).</span><span class="na">getName</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;]&#34;</span><span class="o">);</span>
+            <span class="o">}</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="n">XWorkException</span><span class="o">(</span><span class="n">e</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">ret</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">shouldLogNoSuchPropertyWarning</span><span class="o">(</span><span class="n">OgnlException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">e</span> <span class="k">instanceof</span> <span class="n">NoSuchPropertyException</span> <span class="o">&amp;&amp;</span> <span class="n">devMode</span> <span class="o">&amp;&amp;</span> <span class="n">logMissingProperties</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">tryFindValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Class</span> <span class="n">asType</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">OgnlException</span> <span class="o">{</span>
+        <span class="n">Object</span> <span class="n">value</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">expr</span> <span class="o">=</span> <span class="n">lookupForOverrides</span><span class="o">(</span><span class="n">expr</span><span class="o">);</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">getValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">asType</span><span class="o">);</span>
+            <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">findInContext</span><span class="o">(</span><span class="n">expr</span><span class="o">);</span>
+            <span class="o">}</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">context</span><span class="o">.</span><span class="na">remove</span><span class="o">(</span><span class="n">THROW_EXCEPTION_ON_FAILURE</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">value</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">getValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Class</span> <span class="n">asType</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">OgnlException</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">ognlUtil</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">context</span><span class="o">,</span> <span class="n">root</span><span class="o">,</span> <span class="n">asType</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">findInContext</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">getContext</span><span class="o">().</span><span class="na">get</span><span class="o">(</span><span class="n">name</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">findValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Class</span> <span class="n">asType</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">findValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">asType</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * Log a failed lookup, being more verbose when devMode=true.
+</span><span class="cm">     *
+</span><span class="cm">     * @param expr The failed expression
+</span><span class="cm">     * @param e    The thrown exception.
+</span><span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">logLookupFailure</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">String</span> <span class="n">msg</span> <span class="o">=</span> <span class="n">LoggerUtils</span><span class="o">.</span><span class="na">format</span><span class="o">(</span><span class="s">&#34;Caught an exception while evaluating expression &#39;#0&#39; against value stack&#34;</span><span class="o">,</span> <span class="n">expr</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">devMode</span> <span class="o">&amp;&amp;</span> <span class="n">LOG</span><span class="o">.</span><span class="na">isWarnEnabled</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;NOTE: Previous warning message was issued due to devMode set to true.&#34;</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="n">LOG</span><span class="o">.</span><span class="na">isDebugEnabled</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">LOG</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="n">msg</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#peek()
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">peek</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">root</span><span class="o">.</span><span class="na">peek</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#pop()
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">pop</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">root</span><span class="o">.</span><span class="na">pop</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#push(java.lang.Object)
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">root</span><span class="o">.</span><span class="na">push</span><span class="o">(</span><span class="n">o</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#set(java.lang.String, java.lang.Object)
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">set</span><span class="o">(</span><span class="n">String</span> <span class="n">key</span><span class="o">,</span> <span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+        <span class="c1">//set basically is backed by a Map pushed on the stack with a key being put on the map and the Object being the value
+</span><span class="c1"></span>        <span class="n">Map</span> <span class="n">setMap</span> <span class="o">=</span> <span class="n">retrieveSetMap</span><span class="o">();</span>
+        <span class="n">setMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">o</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Map</span> <span class="nf">retrieveSetMap</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">Map</span> <span class="n">setMap</span><span class="o">;</span>
+        <span class="n">Object</span> <span class="n">topObj</span> <span class="o">=</span> <span class="n">peek</span><span class="o">();</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">shouldUseOldMap</span><span class="o">(</span><span class="n">topObj</span><span class="o">))</span> <span class="o">{</span>
+            <span class="n">setMap</span> <span class="o">=</span> <span class="o">(</span><span class="n">Map</span><span class="o">)</span> <span class="n">topObj</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="n">setMap</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashMap</span><span class="o">();</span>
+            <span class="n">setMap</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">MAP_IDENTIFIER_KEY</span><span class="o">,</span> <span class="s">&#34;&#34;</span><span class="o">);</span>
+            <span class="n">push</span><span class="o">(</span><span class="n">setMap</span><span class="o">);</span>
+        <span class="o">}</span>
+        <span class="k">return</span> <span class="n">setMap</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * check if this is a Map put on the stack  for setting if so just use the old map (reduces waste)
+</span><span class="cm">     */</span>
+    <span class="kd">private</span> <span class="kt">boolean</span> <span class="nf">shouldUseOldMap</span><span class="o">(</span><span class="n">Object</span> <span class="n">topObj</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">topObj</span> <span class="k">instanceof</span> <span class="n">Map</span> <span class="o">&amp;&amp;</span> <span class="o">((</span><span class="n">Map</span><span class="o">)</span> <span class="n">topObj</span><span class="o">).</span><span class="na">get</span><span class="o">(</span><span class="n">MAP_IDENTIFIER_KEY</span><span class="o">)</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**
+</span><span class="cm">     * @see com.opensymphony.xwork2.util.ValueStack#size()
+</span><span class="cm">     */</span>
+    <span class="kd">public</span> <span class="kt">int</span> <span class="nf">size</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">root</span><span class="o">.</span><span class="na">size</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">readResolve</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">// TODO: this should be done better
+</span><span class="c1"></span>        <span class="n">ActionContext</span> <span class="n">ac</span> <span class="o">=</span> <span class="n">ActionContext</span><span class="o">.</span><span class="na">getContext</span><span class="o">();</span>
+        <span class="n">Container</span> <span class="n">cont</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="na">getContainer</span><span class="o">();</span>
+        <span class="n">XWorkConverter</span> <span class="n">xworkConverter</span> <span class="o">=</span> <span class="n">cont</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">XWorkConverter</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+        <span class="n">CompoundRootAccessor</span> <span class="n">accessor</span> <span class="o">=</span> <span class="o">(</span><span class="n">CompoundRootAccessor</span><span class="o">)</span> <span class="n">cont</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">PropertyAccessor</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="n">CompoundRoot</span><span class="o">.</span><span class="na">class</span><span class="o">.</span><span class="na">getName</span><span class="o">());</span>
+        <span class="n">TextProvider</span> <span class="n">prov</span> <span class="o">=</span> <span class="n">cont</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">TextProvider</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">&#34;system&#34;</span><span class="o">);</span>
+        <span class="kt">boolean</span> <span class="n">allow</span> <span class="o">=</span> <span class="s">&#34;true&#34;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">cont</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">&#34;allowStaticMethodAccess&#34;</span><span class="o">));</span>
+        <span class="n">OgnlValueStack</span> <span class="n">aStack</span> <span class="o">=</span> <span class="k">new</span> <span class="n">OgnlValueStack</span><span class="o">(</span><span class="n">xworkConverter</span><span class="o">,</span> <span class="n">accessor</span><span class="o">,</span> <span class="n">prov</span><span class="o">,</span> <span class="n">allow</span><span class="o">);</span>
+        <span class="n">aStack</span><span class="o">.</span><span class="na">setOgnlUtil</span><span class="o">(</span><span class="n">cont</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="n">OgnlUtil</span><span class="o">.</span><span class="na">class</span><span class="o">));</span>
+        <span class="n">aStack</span><span class="o">.</span><span class="na">setRoot</span><span class="o">(</span><span class="n">xworkConverter</span><span class="o">,</span> <span class="n">accessor</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">root</span><span class="o">,</span> <span class="n">allow</span><span class="o">);</span>
+
+        <span class="k">return</span> <span class="n">aStack</span><span class="o">;</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">clearContextValues</span><span class="o">()</span> <span class="o">{</span>
+        <span class="c1">//this is an OGNL ValueStack so the context will be an OgnlContext
+</span><span class="c1"></span>        <span class="c1">//it would be better to make context of type OgnlContext
+</span><span class="c1"></span>        <span class="o">((</span><span class="n">OgnlContext</span><span class="o">)</span> <span class="n">context</span><span class="o">).</span><span class="na">getValues</span><span class="o">().</span><span class="na">clear</span><span class="o">();</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setAcceptProperties</span><span class="o">(</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Pattern</span><span class="o">&gt;</span> <span class="n">acceptedProperties</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">securityMemberAccess</span><span class="o">.</span><span class="na">setAcceptProperties</span><span class="o">(</span><span class="n">acceptedProperties</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setExcludeProperties</span><span class="o">(</span><span class="n">Set</span><span class="o">&lt;</span><span class="n">Pattern</span><span class="o">&gt;</span> <span class="n">excludeProperties</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">securityMemberAccess</span><span class="o">.</span><span class="na">setExcludeProperties</span><span class="o">(</span><span class="n">excludeProperties</span><span class="o">);</span>
+    <span class="o">}</span>
+
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>我们从代码中可以看到ValueStack就是对root对象进行操作，我们看一下CompoundRoot的代码实现：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">CompoundRoot</span> <span class="kd">extends</span> <span class="n">ArrayList</span> <span class="o">{</span>
+
+    <span class="kd">public</span> <span class="nf">CompoundRoot</span><span class="o">()</span> <span class="o">{</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="nf">CompoundRoot</span><span class="o">(</span><span class="n">List</span> <span class="n">list</span><span class="o">)</span> <span class="o">{</span>
+        <span class="kd">super</span><span class="o">(</span><span class="n">list</span><span class="o">);</span>
+    <span class="o">}</span>
+
+
+    <span class="kd">public</span> <span class="n">CompoundRoot</span> <span class="nf">cutStack</span><span class="o">(</span><span class="kt">int</span> <span class="n">index</span><span class="o">)</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="k">new</span> <span class="n">CompoundRoot</span><span class="o">(</span><span class="n">subList</span><span class="o">(</span><span class="n">index</span><span class="o">,</span> <span class="n">size</span><span class="o">()));</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">peek</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">get</span><span class="o">(</span><span class="n">0</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="n">Object</span> <span class="nf">pop</span><span class="o">()</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">remove</span><span class="o">(</span><span class="n">0</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">push</span><span class="o">(</span><span class="n">Object</span> <span class="n">o</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">add</span><span class="o">(</span><span class="n">0</span><span class="o">,</span> <span class="n">o</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>看到这里，我们了解root对象的实现，root对象就是ArrayList。 接下来在看几个OgnlValueStack里的方法</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">    <span class="kd">private</span> <span class="n">Object</span> <span class="nf">getValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Class</span> <span class="n">asType</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">OgnlException</span> <span class="o">{</span>
+        <span class="k">return</span> <span class="n">ognlUtil</span><span class="o">.</span><span class="na">getValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">context</span><span class="o">,</span> <span class="n">root</span><span class="o">,</span> <span class="n">asType</span><span class="o">);</span>
+    <span class="o">}</span>
+
+     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">context</span> <span class="o">=</span> <span class="n">getContext</span><span class="o">();</span>
+        <span class="k">try</span> <span class="o">{</span>
+            <span class="n">trySetValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">context</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">OgnlException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+            <span class="n">handleOgnlException</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">e</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RuntimeException</span> <span class="n">re</span><span class="o">)</span> <span class="o">{</span> <span class="c1">//XW-281
+</span><span class="c1"></span>            <span class="n">handleRuntimeException</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">value</span><span class="o">,</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">re</span><span class="o">);</span>
+        <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
+            <span class="n">cleanUpContext</span><span class="o">(</span><span class="n">context</span><span class="o">);</span>
+        <span class="o">}</span>
+    <span class="o">}</span>
+     
+
+    <span class="kd">private</span> <span class="kt">void</span> <span class="nf">trySetValue</span><span class="o">(</span><span class="n">String</span> <span class="n">expr</span><span class="o">,</span> <span class="n">Object</span> <span class="n">value</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">throwExceptionOnFailure</span><span class="o">,</span> <span class="n">Map</span><span class="o">&lt;</span><span class="n">String</span><span class="o">,</span> <span class="n">Object</span><span class="o">&gt;</span> <span class="n">context</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">OgnlException</span> <span class="o">{</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">XWorkConverter</span><span class="o">.</span><span class="na">CONVERSION_PROPERTY_FULLNAME</span><span class="o">,</span> <span class="n">expr</span><span class="o">);</span>
+        <span class="n">context</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">REPORT_ERRORS_ON_NO_PROP</span><span class="o">,</span> <span class="o">(</span><span class="n">throwExceptionOnFailure</span><span class="o">)</span> <span class="o">?</span> <span class="n">Boolean</span><span class="o">.</span><span class="na">TRUE</span> <span class="o">:</span> <span class="n">Boolean</span><span class="o">.</span><span class="na">FALSE</span><span class="o">);</span>
+        <span class="n">ognlUtil</span><span class="o">.</span><span class="na">setValue</span><span class="o">(</span><span class="n">expr</span><span class="o">,</span> <span class="n">context</span><span class="o">,</span> <span class="n">root</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
+    <span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>从代码里可以看得到，ValueStack不仅对root对象的读写，还可以用ognl表达式对root对象进行操作(准确来说支持ognl的计算)。 如下是OgnlValueStack对象的几个public方法:</p>
+
+<ol>
+<li>setValue  :  用于ognl计算</li>
+<li>findString:  用于ognl计算</li>
+<li>findValue :  用于ognl计算</li>
+<li>peek :  用于操作root对象</li>
+<li>pop :  用于操作root对象</li>
+<li>push  :  用于操作root对象</li>
+<li>set :  用于操作root对象</li>
+<li>size  :  用于操作root对象</li>
+<li>clearContextValues ： 用于操作上下文对象</li>
+</ol>
+
+<p>总结一下： ValueStack不仅用于操作root对象，还用于ognl表达式计算.</p>
+
+<blockquote>
+<p>TIPS： OgnlUtil用于提供对OgnlAPI的公共访问.</p>
+</blockquote>
+
+<h3 id="0x06-作为核心响应类的action与传统servlet实现模式下的响应类有什么区别">0x06 作为核心响应类的Action与传统Servlet实现模式下的响应类有什么区别 ？</h3>
+
+<p>Action返回的是一个string标识，result根据这个标识进行下一步行为。然而Servlet返回的就是最终结果（字符串）.</p>
+
+<p>TODO: 待续</p>
 
     </article>
 
