@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Dean&#39;s notes</title>
+    <link>https://dean2021.github.io/posts/</link>
+    <description>Recent content in Posts on Dean&#39;s notes</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>&amp;copy; Copyright 2018 Dean</copyright>
+    <lastBuildDate>Wed, 05 Dec 2018 17:07:00 +0800</lastBuildDate>
+    
+	<atom:link href="https://dean2021.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>《Struts2 技术内幕》读书笔记: XWork元素详解</title>
+      <link>https://dean2021.github.io/posts/struts2-internals-readbook-note_05/</link>
+      <pubDate>Wed, 05 Dec 2018 17:07:00 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/struts2-internals-readbook-note_05/</guid>
+      <description>纸上得来终觉浅, 预知此事要躬行
+ 0x01 构成XWork数据流体系的两大元素之间有什么样的关系 ？  ActionContext 和 ValueStack之间是从属关系, ValueStack是ActionContext的一个组成部分.</description>
+    </item>
+    
+    <item>
+      <title>《Struts2 技术内幕》读书笔记: 深入XWork设计原理</title>
+      <link>https://dean2021.github.io/posts/struts2-internals-readbook-note_04/</link>
+      <pubDate>Wed, 05 Dec 2018 14:27:19 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/struts2-internals-readbook-note_04/</guid>
+      <description>0x01 基于人机交互的请求响应模式主要由哪三大要素构成 ？  沟通协议 请求内容 相应内容  0x02 在Java语言中 ，有哪三种主要的请求响应的实现模式 ？  参数-返回（Param-Return）模式.</description>
+    </item>
+    
+    <item>
+      <title>《Struts2 技术内幕》读书笔记: OGNL</title>
+      <link>https://dean2021.github.io/posts/struts2-internals-readbook-note_03/</link>
+      <pubDate>Fri, 23 Nov 2018 16:55:20 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/struts2-internals-readbook-note_03/</guid>
+      <description>OGNL是Object-Graph Navigation Language的缩写，它是一种功能强大的表达式语言，通过它简单一致的表达式语法，可以存取对象的任意属性，调用对象的方法，遍历整个对象的结构图，实现字段类型转化等功能。它使用相同的表达式去存取对象的属性。
+ 0x01 为什么要引入表达式引擎 ？表达式引擎在Web开发中有什么重要作用 ？  同一个对象 ，在 “弱类型 ”的平台和一个 “强类型 ”的平台之间交互 ，就必须有一个非常重要的 “翻译 ”角色解决这种 “不匹配 ” 。这个角色 ，就是我们所说的表达式引擎 ，它充当着桥梁作用 ，保证数据能够顺利地在MVC的各个层次进行流转 。  0x02 一个合格的表达式语言应该具备什么？  能够处理表达式与对象之间的映射关系，并且这种关系是双向的。 能够支持丰富多样的表达式语法计算。 能够支持必要的数据类型转换.</description>
+    </item>
+    
+    <item>
+      <title>《Struts2 技术内幕》读书笔记: XWork中的容器</title>
+      <link>https://dean2021.github.io/posts/struts2-internals-readbook-note_02/</link>
+      <pubDate>Fri, 23 Nov 2018 16:55:20 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/struts2-internals-readbook-note_02/</guid>
+      <description>&amp;ldquo;容器&amp;rdquo;是用来解决：“在程序的运行期，应该如何创建我们需要的对象？” 和 &amp;ldquo;当创建新对象，该对象依赖的对象也能正确被创建出来？&amp;rdquo;
+ 对象的生命周期管理包含哪两个方面的内容 ？  在程序运行期，对象实例的创建和引用机制. 对象与其关联的对象的依赖关系的处理机制.</description>
+    </item>
+    
+    <item>
+      <title>《Struts2 技术内幕》读书笔记: Struts2 概况</title>
+      <link>https://dean2021.github.io/posts/struts2-internals-readbook-note/</link>
+      <pubDate>Fri, 23 Nov 2018 15:05:04 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/struts2-internals-readbook-note/</guid>
+      <description>Struts2和Struts1.x有什么区别？ 他们各自发展轨迹又如何?  Struts1是Apache社区在2000年3月31号发布的一款javaweb框架. 随着时代进步,Struts1的不足显而易见,此时Opensymphony开源了一款优秀的web框架,名为Webwork2. Apache社区在2005年12月14日宣布Struts项目和Webwork2项目合并，推出名为Struts2的Web框架. Strus2框架开始进入辉煌时代.  Struts2依赖于那些核心技术？  表示层技术, Struts2表示层主要是整合, 如整合Freemarker或Velocity为核心的模板技术、构建Flash应用的Flex技术、ajax技术等,以plugin形式进行整合.</description>
+    </item>
+    
+    <item>
+      <title>[经典回顾] S2-045漏洞的一些分析细节</title>
+      <link>https://dean2021.github.io/posts/s2-045/</link>
+      <pubDate>Wed, 21 Nov 2018 16:37:29 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/s2-045/</guid>
+      <description>0x01、为什么网上的s2-045漏洞分析文章和本地代码对不上？ 原因是由于版本不对：
+2.3.5 ~ 2.3.31 版本，漏洞出现位置： org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest类中的buildErrorMessage方法里，97行调用了LocalizedTextUtil.findText 2.5 ~ 2.</description>
+    </item>
+    
+    <item>
+      <title>2018年-研究计划清单</title>
+      <link>https://dean2021.github.io/posts/plan/</link>
+      <pubDate>Thu, 15 Nov 2018 15:14:31 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/plan/</guid>
+      <description>参考文献中标记删除线表示已阅读完, 清单会不断Update.
+ 一、自动化Java 0day挖掘方向  涉及到技术栈:Java Instrumentation、</description>
+    </item>
+    
+    <item>
+      <title>Golang投毒小技巧</title>
+      <link>https://dean2021.github.io/posts/golang-compiler-poisoning/</link>
+      <pubDate>Tue, 06 Nov 2018 20:55:35 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/golang-compiler-poisoning/</guid>
+      <description>小技巧:
+ 分享一个小玩意，修改 /usr/local/Cellar/go/1.10.3/libexec/src/runtime/proc.go 文件的main函数，加入恶意代码，以后在这台机器上编译任意go文件都会内置恶意代码，可以用来留后门 ^^
+ </description>
+    </item>
+    
+    <item>
+      <title>Java RMI 入门 - [无坑篇]</title>
+      <link>https://dean2021.github.io/posts/java-rmi/</link>
+      <pubDate>Tue, 06 Nov 2018 19:19:22 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/java-rmi/</guid>
+      <description>Introduction JavaRMI用于不同虚拟机之间的通信，这些虚拟机可以在不同的主机上、也可以在同一个主机上；一个虚拟机中的对象调用另一个虚拟上中的对象的方法，只不过是允许被远程调用的对象要通过一些标志加以标识。这样做的特点如下：
+ 优点：避免重复造轮子； 缺点：调用过程很慢，而且该过程是不可靠的，容易发生不可预料的错误，比如网络错误等；
+ 在RMI中的核心是远程对象（remote object），除了对象本身所在的虚拟机，其他虚拟机也可以调用此对象的方法，而且这些虚拟机可以不在同一个主机上。每个远程对象都要实现一个或者多个远程接口来标识自己，声明了可以被外部系统或者应用调用的方法（当然也有一些方法是不想让人访问的）。
+从网上阅读了无数rmi demo和 paper，存在各种各样的坑，搞了一下午，终于填完，下方代码保证能够运行：</description>
+    </item>
+    
+    <item>
+      <title>My First Post</title>
+      <link>https://dean2021.github.io/posts/my-first-post/</link>
+      <pubDate>Tue, 06 Nov 2018 18:45:40 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/my-first-post/</guid>
+      <description> Hello, Github.io
+ </description>
+    </item>
+    
+  </channel>
+</rss>

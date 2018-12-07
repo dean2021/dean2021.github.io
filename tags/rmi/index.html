@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Rmi - Dean&#39;s notes</title>
+  <meta property="og:title" content="Rmi - Dean&#39;s notes" />
+  <meta name="twitter:title" content="Rmi - Dean&#39;s notes" />
+  <meta name="author" content="Dean"/>
+  <meta property="og:site_name" content="Dean&#39;s notes" />
+  <meta property="og:url" content="https://dean2021.github.io/tags/rmi/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.52" />
+  <link href="/tags/rmi/index.xml" rel="alternate" type="application/rss+xml" title="Dean&#39;s notes" />
+  <link href="/tags/rmi/index.xml" rel="feed" type="application/rss+xml" title="Dean&#39;s notes" />
+
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">Dean&#39;s notes</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-home"><a href="/" title="Home">Home</a></li>
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="breadcrumb">
+    <a href="/tags/">Tags</a> / Rmi
+  </div>
+  <div class="main" role="main">
+    <section class="list taxonomy-list">
+      <article class="article">
+        <a href="/posts/java-rmi/" class="article-titles">
+          <h2 class="article-title">Java RMI 入门 - [无坑篇]</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>November 6, 2018</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/java/">
+              <i class="fas fa-folder"></i>
+              java
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/java/">
+              <i class="fas fa-tag"></i>
+              java
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/rmi/">
+              <i class="fas fa-tag"></i>
+              rmi
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          Introduction JavaRMI用于不同虚拟机之间的通信，这些虚拟机可以在不同的主机上、也可以在同一个主机上；一个虚拟机中的对象调用另一个虚拟上中的对象的方法，只不过是允许被远程调用的对象要通过一些标志加以标识。这样做的特点如下：
+ 优点：避免重复造轮子； 缺点：调用过程很慢，而且该过程是不可靠的，容易发生不可预料的错误，比如网络错误等；
+ 在RMI中的核心是远程对象（remote object），除了对象本身所在的虚拟机，其他虚拟机也可以调用此对象的方法，而且这些虚拟机可以不在同一个主机上。每个远程对象都要实现一个或者多个远程接口来标识自己，声明了可以被外部系统或者应用调用的方法（当然也有一些方法是不想让人访问的）。
+从网上阅读了无数rmi demo和 paper，存在各种各样的坑，搞了一下午，终于填完，下方代码保证能够运行：
+        </div>
+        <div class="article-readmore"><a href="/posts/java-rmi/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+    </section>
+    
+
+  </div>
+
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2018 Dean</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-rsslink">
+      <a href="/tags/rmi/index.xml" type="application/rss+xml" target="_blank" title="RSS">
+        <i class="fas fa-rss"></i>
+      </a>
+    </li>
+    <li class="site-footer-item-about"><a href="/about/" title="About">About</a></li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>  and Dean
+  </div>
+</div>
+
+
+</body>
+</html>

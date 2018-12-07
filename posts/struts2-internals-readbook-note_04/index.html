@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>《Struts2 技术内幕》读书笔记: 深入XWork设计原理 - Dean&#39;s notes</title>
+  <meta property="og:title" content="《Struts2 技术内幕》读书笔记: 深入XWork设计原理 - Dean&#39;s notes" />
+  <meta name="twitter:title" content="《Struts2 技术内幕》读书笔记: 深入XWork设计原理 - Dean&#39;s notes" />
+  <meta name="description" content="0x01 基于人机交互的请求响应模式主要由哪三大要素构成 ？  沟通协议 请求内容 相应内容  0x02 在Java语言中 ，有哪三种主要的请求响应的实现模式 ？  参数-返回（Param-Return）模式.">
+  <meta property="og:description" content="0x01 基于人机交互的请求响应模式主要由哪三大要素构成 ？  沟通协议 请求内容 相应内容  0x02 在Java语言中 ，有哪三种主要的请求响应的实现模式 ？  参数-返回（Param-Return）模式.">
+  <meta name="twitter:description" content="0x01 基于人机交互的请求响应模式主要由哪三大要素构成 ？  沟通协议 请求内容 相应内容  0x02 在Java语言中 ，有哪三种主要的请求响应的实现模式 ？  参数-返回（Param-Return）模式.">
+  <meta name="author" content="Dean"/>
+  <meta property="og:site_name" content="Dean&#39;s notes" />
+  <meta property="og:url" content="https://dean2021.github.io/posts/struts2-internals-readbook-note_04/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.52" />
+
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">Dean&#39;s notes</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-home"><a href="/" title="Home">Home</a></li>
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">《Struts2 技术内幕》读书笔记: 深入XWork设计原理</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>December 5, 2018</time></li>
+      </ul>
+      
+      
+
+<h3 id="0x01-基于人机交互的请求响应模式主要由哪三大要素构成">0x01 基于人机交互的请求响应模式主要由哪三大要素构成 ？</h3>
+
+<ol>
+<li>沟通协议</li>
+<li>请求内容</li>
+<li>相应内容</li>
+</ol>
+
+<h3 id="0x02-在java语言中-有哪三种主要的请求响应的实现模式">0x02 在Java语言中 ，有哪三种主要的请求响应的实现模式 ？</h3>
+
+<ol>
+<li>参数-返回（Param-Return）模式.</li>
+<li>参数参数（Param-Param）模式, 也成为Servlet模式.</li>
+<li>POJO模式：属于线程安全模式，和以上模式有这点本质的区别。</li>
+</ol>
+
+<p><img src="/images/struts2/xwork-1.jpg" alt="struts" /></p>
+
+<h3 id="0x03-什么是数据流-什么是控制流">0x03 什么是数据流 ？什么是控制流 ？</h3>
+
+<ol>
+<li>数据流： 描述程序运行过程中数据的流转方式和行为状态</li>
+<li>控制流：控制程序逻辑执行的先后顺序</li>
+</ol>
+
+<h3 id="0x04-数据在进行存储和传输时-有哪三种具体的表现形式">0x04 数据在进行存储和传输时 ，有哪三种具体的表现形式 ？</h3>
+
+<ol>
+<li>Map</li>
+<li>FormBean</li>
+<li>POJO</li>
+</ol>
+
+<h3 id="0x05-xwork的宏观视图中蕴含着哪三大体系-它们互相之间形成了什么样的关系">0x05  XWork的宏观视图中蕴含着哪三大体系 ？它们互相之间形成了什么样的关系 ？</h3>
+
+<ol>
+<li>核心分发器(Disptcher) : 作为XWork框架的调用者和驱动执行者.</li>
+<li>XWork的控制流体系 : XWork在进行请求相应的一些列执行元素，其中包括 ActionProxy、ActionInvocation、Interceptor、Action、Result.</li>
+<li>XWork的数据流体系 : XWork在进行请求相应时依赖的数据环境元素，其中包括 ActionContext、ValueStack。</li>
+<li>以上三者之间形成了调用关系（Disptcher调用XWork框架）和映衬关系（你中有我，我中有你，如控制流控制的数据流）</li>
+</ol>
+
+<p><img src="/images/struts2/52871312.png" alt="struts2" /></p>
+
+<h3 id="0x06-xwork的数据流体系由哪两大元素构成-它们之间有什么关系">0x06  XWork的数据流体系由哪两大元素构成 ？它们之间有什么关系 ？</h3>
+
+<ol>
+<li>ActionContext 数据环境 ： 是一个独立的数据结构，其主要的作用是为了XWork的执行提供数据环境。</li>
+<li>ValueStack 数据访问环境 ： 本身是一个数据结构，起主要作用是对OGNL计算进行扩展。</li>
+<li>以上两者之间关系： ValueStack赋予了ActionContext数据计算能力，且似的ValueStack成为一个可以进行数据访问的环境。</li>
+</ol>
+
+<h3 id="0x07-xwork的控制流体系由哪五大元素构成-它们在逻辑上又如何进行划分">0x07  XWork的控制流体系由哪五大元素构成 ？它们在逻辑上又如何进行划分 ？</h3>
+
+<ol>
+<li>Action 核心处理类： XWork中定义的核心事件处理接口。</li>
+<li>Interceptor 拦截器：本身是AOP的概念， 表示对程序的某个逻辑执行点进行拦截，从而能够在这个逻辑执行点前、后，进行逻辑扩展。</li>
+<li>Result 执行结果：用于对Action核心处理类相应后的结果处理。</li>
+<li>ActionProxy 执行环境： XWork框架的执行入口，主要作用就在于对外屏蔽整个控制流核心元素的执行过程 ，对内则为Interceptor、Action、Result等事件处理节点对象提供一个无干扰的执行环境。</li>
+<li>ActionInvocation 核心调度器：组织Action、Interceptor、Result等事件处理节点对象执行次序的核心调度器.</li>
+</ol>
+
+<blockquote>
+<p>XWork控制流元素的一个形象比喻 <br>
+XWork控制流被划分为五大元素 ： Action 、 Interceptor 、 Result 、 ActionProxy 、 ActionInvocation。我们可以使用一个战斗序列来对这五大元素之间的关系进行诠释 。每当一个战役打响的时候 ，总指挥部总是需要分派一个具体番号的部队 （ ActionProxy ）来执行战斗 。任何一支部队 ，都有主力军 （ Action ）和策应部队 （ Interceptor ） 。主力军 （ Action ）负责核心战斗 ，而策应部队 （ Interceptor ）则负责对主力部队进行策应和援助 。然而 ，所有的战斗指令都是由部队的指挥官 （ ActionInvocation）决定的 。指挥官 （ ActionInvocation）是一个部队 （ ActionProxy ）的核心 ，他负责主力部队 （ Action ）和策应部队 （ Interceptor ）的调度 。当一场战斗结束以后 ，指挥官 （ ActionInvocation）还要负责指挥部队下一步的动向 （ Result ） ，是乘胜追击敌人 ，还是继续待命 。</p>
+</blockquote>
+
+    </article>
+
+    
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/struts2-internals-readbook-note_05/" data-toggle="tooltip" data-placement="top" title="《Struts2 技术内幕》读书笔记: XWork元素详解">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/struts2-internals-readbook-note_03/" data-toggle="tooltip" data-placement="top" title="《Struts2 技术内幕》读书笔记: OGNL">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2018 Dean</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-about"><a href="/about/" title="About">About</a></li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>  and Dean
+  </div>
+</div>
+
+
+</body>
+</html>

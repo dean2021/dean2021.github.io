@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>《Struts2 技术内幕》读书笔记: Struts2 概况 - Dean&#39;s notes</title>
+  <meta property="og:title" content="《Struts2 技术内幕》读书笔记: Struts2 概况 - Dean&#39;s notes" />
+  <meta name="twitter:title" content="《Struts2 技术内幕》读书笔记: Struts2 概况 - Dean&#39;s notes" />
+  <meta name="description" content="Struts2和Struts1.x有什么区别？ 他们各自发展轨迹又如何?  Struts1是Apache社区在2000年3月31号发布的一款javaweb框架. 随着时代进步,Struts1的不足显而易见,此时Opensymphony开源了一款优秀的web框架,名为Webwork2. Apache社区在2005年12月14日宣布Struts项目和Webwork2项目合并，推出名为Struts2的Web框架. Strus2框架开始进入辉煌时代.  Struts2依赖于那些核心技术？  表示层技术, Struts2表示层主要是整合, 如整合Freemarker或Velocity为核心的模板技术、构建Flash应用的Flex技术、ajax技术等,以plugin形式进行整合.">
+  <meta property="og:description" content="Struts2和Struts1.x有什么区别？ 他们各自发展轨迹又如何?  Struts1是Apache社区在2000年3月31号发布的一款javaweb框架. 随着时代进步,Struts1的不足显而易见,此时Opensymphony开源了一款优秀的web框架,名为Webwork2. Apache社区在2005年12月14日宣布Struts项目和Webwork2项目合并，推出名为Struts2的Web框架. Strus2框架开始进入辉煌时代.  Struts2依赖于那些核心技术？  表示层技术, Struts2表示层主要是整合, 如整合Freemarker或Velocity为核心的模板技术、构建Flash应用的Flex技术、ajax技术等,以plugin形式进行整合.">
+  <meta name="twitter:description" content="Struts2和Struts1.x有什么区别？ 他们各自发展轨迹又如何?  Struts1是Apache社区在2000年3月31号发布的一款javaweb框架. 随着时代进步,Struts1的不足显而易见,此时Opensymphony开源了一款优秀的web框架,名为Webwork2. Apache社区在2005年12月14日宣布Struts项目和Webwork2项目合并，推出名为Struts2 …">
+  <meta name="author" content="Dean"/>
+  <meta property="og:site_name" content="Dean&#39;s notes" />
+  <meta property="og:url" content="https://dean2021.github.io/posts/struts2-internals-readbook-note/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.52" />
+
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">Dean&#39;s notes</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-home"><a href="/" title="Home">Home</a></li>
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">《Struts2 技术内幕》读书笔记: Struts2 概况</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>November 23, 2018</time></li>
+      </ul>
+      
+      
+
+<h3 id="struts2和struts1-x有什么区别-他们各自发展轨迹又如何">Struts2和Struts1.x有什么区别？ 他们各自发展轨迹又如何?</h3>
+
+<ol>
+<li>Struts1是Apache社区在2000年3月31号发布的一款javaweb框架.</li>
+<li>随着时代进步,Struts1的不足显而易见,此时Opensymphony开源了一款优秀的web框架,名为Webwork2.</li>
+<li>Apache社区在2005年12月14日宣布Struts项目和Webwork2项目合并，推出名为Struts2的Web框架.</li>
+<li>Strus2框架开始进入辉煌时代.</li>
+</ol>
+
+<h3 id="struts2依赖于那些核心技术">Struts2依赖于那些核心技术？</h3>
+
+<ol>
+<li>表示层技术, Struts2表示层主要是整合, 如整合Freemarker或Velocity为核心的模板技术、构建Flash应用的Flex技术、ajax技术等,以plugin形式进行整合.</li>
+<li>设计模式, Struts2源码中统分使用了设计模式，如 Command、ThreadLocal、Decorator、Strategy、Builder、Chain Of Responsibility、Proxy等设计模式.</li>
+<li>OGNL表达式引擎, 表达式引擎是通过特定的语法进行操作java对象(读、写), OGNL在Struts2中主要用来解决不同形式的数据之间的转化和通信.</li>
+<li>Xwork框架, 一个基于Command设计模式的事件请求执行框架, Struts2负责与Web容器打交道部分,剩余的工作由Xwork来完成.</li>
+</ol>
+
+<h3 id="struts2可以分为那两条逻辑运行主线">Struts2可以分为那两条逻辑运行主线？</h3>
+
+<p>Struts2严格遵守Servlet标准,通过Filter接口处理HTTP请求,通过配置web.xml引入Struts2框架:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-xml" data-lang="xml">  <span class="nt">&lt;filter&gt;</span>
+         <span class="c">&lt;!--过滤器名 --&gt;</span>
+         <span class="nt">&lt;filter-name&gt;</span>struts2<span class="nt">&lt;/filter-name&gt;</span>
+         <span class="c">&lt;!-- 配置Struts 2.3.x的核心Filter的实现类 --&gt;</span>
+         <span class="c">&lt;!--&lt;filter-class&gt;org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter&lt;/filter-class&gt;--&gt;</span>
+         <span class="c">&lt;!-- 配置Struts 2.5.x的核心Filter的实现类 --&gt;</span>
+         <span class="nt">&lt;filter-class&gt;</span>org.apache.struts2.dispatcher.filter.StrutsPrepareAndExecuteFilter<span class="nt">&lt;/filter-class&gt;</span>
+     <span class="nt">&lt;/filter&gt;</span>
+     <span class="c">&lt;!-- 让Struts 2的核心Filter拦截所有请求 --&gt;</span>
+     <span class="nt">&lt;filter-mapping&gt;</span>
+         <span class="c">&lt;!--过滤器名 --&gt;</span>
+         <span class="nt">&lt;filter-name&gt;</span>struts2<span class="nt">&lt;/filter-name&gt;</span>
+         <span class="c">&lt;!-- 匹配所有请求 --&gt;</span>
+         <span class="nt">&lt;url-pattern&gt;</span>/*<span class="nt">&lt;/url-pattern&gt;</span>
+     <span class="nt">&lt;/filter-mapping&gt;</span></code></pre></td></tr></table>
+</div>
+</div>
+<ol>
+<li>第一条主线是Struts2初始化, 初始化通过init方法进行完成, 初始化主要包括： 框架元素的初始化, 如框架内置对象的创建和缓存, 如 容器的创建.</li>
+<li>第二条主线是HTTP请求处理主线, 该主线是Struts2核心主线, 划分为2个阶段：
+
+<ol>
+<li>第一阶段： HTTP 请求预处理, 为业务逻辑执行做必要的数据环境和运行环境, 主要是和web容器打交道. (此阶段由Struts2完成, struts2-core.2.x.jar )</li>
+<li>第二阶段： XWork执行业务逻辑, 该阶段不依赖web容器，主要用来处理业务逻辑,与第一阶段完全解耦. (此阶段由Xwork框架完成, xwork-core.2.x.jar)</li>
+</ol></li>
+</ol>
+
+<h3 id="struts2通过哪些元素的相互配合来完成初始化运行主线">Struts2通过哪些元素的相互配合来完成初始化运行主线？</h3>
+
+<ol>
+<li><p>Struts2中的容器及其实现类</p>
+
+<ol>
+<li>Container, 容器定义接口，是Struts2内部进行对象管理的基础构建.</li>
+<li>ContainerImpl, 容器的实现类, 内部实现了Struts2进行对象生命周期的管理和依赖注入的基本功能.</li>
+<li>PackageConfig, 其中定义了事件响应模型的完整数据结构.</li>
+</ol></li>
+
+<li><p>Struts2中容器的加载接口(Provider)和容器的构造器(Buider)</p>
+
+<ol>
+<li>ConfigurationProvider, 配置加载结构的统一接口。 Struts2将初始化元素分为Container和PackageConfig两类, 这里使用了多重继承将两类配置加载接口进行统一.</li>
+<li>ContainerProvider, Container的配置加载接口, 其实现类需要负责初始化容器中的所有对象.</li>
+<li>PackageProvider, PackageConfig的配置加载接口, 其实现类需要负责初始化用于处理事件请求的配置对象.</li>
+<li>ContainerBuilder, Container的构造器,用于在初始化是构造容器.</li>
+<li>PackageConfigBuilder, PackageConfig的构造器，用在初始化是构造PackageConfig.</li>
+</ol></li>
+
+<li><p>Struts2初始化主线的辅助元素</p>
+
+<ol>
+<li>ConfigurationManager, 配置行为操作代理类，包含所有ContainerProvider、PackageProvider 的实现及所有配置的机构化数据.</li>
+<li>Configurationm, Struts2配置数据的管理类,作为运行时获取配置的基本接口, 承载所有配置的结构化数据和操作方法.</li>
+</ol></li>
+</ol>
+
+<h3 id="struts2通过哪些元素的相互配合来完成http请求处理主线">Struts2通过哪些元素的相互配合来完成HTTP请求处理主线？</h3>
+
+<ol>
+<li>Struts2 进行HTTP请求预处理阶段的主要微观元素
+
+<ol>
+<li>Dispatcher, Struts2的核心分发器,是Struts2进行HTTP请求处理的实际场所</li>
+<li>PrepareOperations, Struts2进行HTTP请求预处理操作集合</li>
+<li>ExecuteOperations, Struts2进行HTTP请求逻辑处理的操作集合.</li>
+</ol></li>
+<li>Xwork 执行业务逻辑阶段的主要微观元素 (7大元素贯穿XWork事件执行的生命周期)
+
+<ol>
+<li>ActionProxy, XWork生产线中的执行环境, 整合生产线的入口, 包含所有执行的细节.</li>
+<li>ActionInvocation, 生产线中的调度者, 负责调度生产线各元素的执行顺序.</li>
+<li>Interceptor, 生产线中的工序序列， 用来丰富生产线的功能</li>
+<li>Action, 生产线中的核心工序, 负载核心逻辑调用和实现.</li>
+<li>ActionContext, 生产线的辅助设备, 提供生产线运行的必备的数据环境.</li>
+<li>ValueStack, 数据环境中提供表达式运算的工具类,也是Xwork进行数据访问的基础.</li>
+<li>Result, 生产线中的末端设备, 负责输出生产线的生产结果.</li>
+</ol></li>
+</ol>
+
+<h3 id="xwork中7大元素的调用关系">XWork中7大元素的调用关系</h3>
+
+<p><img src="/images/struts2/52871312.png" alt="struts2" /></p>
+
+<h3 id="struts2中有哪些配置表现形式">Struts2中有哪些配置表现形式 ？</h3>
+
+<ol>
+<li>web.xml, Struts2入口程序定义、运行参数定义. (应用级)</li>
+<li>struts2-default.xml, 框架级别的定义, 包含Struts2所有的基本构成元素定义.  (框架级)</li>
+<li>struts.xml, 应用级别定义, 包含应用级别覆盖框架级别的默认行为定义.  (应用级)</li>
+<li>default.properties, 框架级别定义, Struts2默认的运行参数配置.   (框架级)</li>
+<li>struts.proeperties, 应用级别定义, 用于覆盖框架级运行参数覆盖定义.(应用级)</li>
+<li>struts-plugin.xml, 应用级别定义, struts.xml的扩展, strtus2所支持的插件形式的配置文件. (应用级)</li>
+</ol>
+
+<h3 id="struts2中的配置元素可以分为哪两个大类">Struts2中的配置元素可以分为哪两个大类 ？</h3>
+
+<ol>
+<li>容器配置元素： 节点分为bean、constant</li>
+<li>事件映射关系配置元素:  节点为 package</li>
+</ol>
+
+    </article>
+
+    
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/struts2-internals-readbook-note_02/" data-toggle="tooltip" data-placement="top" title="《Struts2 技术内幕》读书笔记: XWork中的容器">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/s2-045/" data-toggle="tooltip" data-placement="top" title="[经典回顾] S2-045漏洞的一些分析细节">Older &gt;</a>
+      </li>
+    </ul>
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2018 Dean</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-about"><a href="/about/" title="About">About</a></li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>  and Dean
+  </div>
+</div>
+
+
+</body>
+</html>
