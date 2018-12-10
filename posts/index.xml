@@ -13,7 +13,7 @@
     
     
     <item>
-      <title>Struts2 运行流程分析</title>
+      <title>Struts2 运行流程分析之Dispatcher初始化</title>
       <link>https://dean2021.github.io/posts/struts2-internals-readbook-note_05/</link>
       <pubDate>Mon, 10 Dec 2018 18:04:27 +0800</pubDate>
       
