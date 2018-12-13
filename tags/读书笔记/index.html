@@ -44,6 +44,40 @@
   <div class="main" role="main">
     <section class="list taxonomy-list">
       <article class="article">
+        <a href="/posts/struts2-internals-readbook-note_07/" class="article-titles">
+          <h2 class="article-title">Struts2 运行流程分析之doFilter</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>December 12, 2018</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/java/">
+              <i class="fas fa-folder"></i>
+              java
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-categories">
+            <a href="/categories/struts2-%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95/">
+              <i class="fas fa-folder"></i>
+              Struts2 技术内幕
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">
+              <i class="fas fa-tag"></i>
+              读书笔记
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          注意: 本文基于Struts2.2.1版本进行的代码分析
+ 首先先大致看一下StrutsPrepareAndExecuteFilter.java的doFilter的实现
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException { HttpServletRequest request = (HttpServletRequest) req; HttpServletResponse response = (HttpServletResponse) res; try { // 设置request/response编码  prepare.
+        </div>
+        <div class="article-readmore"><a href="/posts/struts2-internals-readbook-note_07/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
         <a href="/posts/struts2-internals-readbook-note_05/" class="article-titles">
           <h2 class="article-title">Struts2 运行流程分析之Dispatcher初始化</h2>
           

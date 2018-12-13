@@ -7,10 +7,30 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>&amp;copy; Copyright 2018 Dean</copyright>
-    <lastBuildDate>Mon, 10 Dec 2018 18:04:27 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 12 Dec 2018 15:27:48 +0800</lastBuildDate>
     
 	<atom:link href="https://dean2021.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>My Lucky Cat</title>
+      <link>https://dean2021.github.io/posts/luckycat/</link>
+      <pubDate>Wed, 12 Dec 2018 15:27:48 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/luckycat/</guid>
+      <description>功能  Debug必备,专职莫名奇妙的又难复现的Bug. 挖洞必备,开阔挖洞思路,增加挖洞灵感. 减压小助手,工作压力大,这只喵始终提醒你保持微笑和乐观心态. 孤单杀手, 你不是一个人在战斗，还有这只喵在陪着你！  附上靓照:</description>
+    </item>
+    
+    <item>
+      <title>Struts2 运行流程分析之doFilter</title>
+      <link>https://dean2021.github.io/posts/struts2-internals-readbook-note_07/</link>
+      <pubDate>Wed, 12 Dec 2018 15:09:58 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/struts2-internals-readbook-note_07/</guid>
+      <description>注意: 本文基于Struts2.2.1版本进行的代码分析
+ 首先先大致看一下StrutsPrepareAndExecuteFilter.java的doFilter的实现
+1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException { HttpServletRequest request = (HttpServletRequest) req; HttpServletResponse response = (HttpServletResponse) res; try { // 设置request/response编码  prepare.</description>
+    </item>
     
     <item>
       <title>Struts2 运行流程分析之Dispatcher初始化</title>
