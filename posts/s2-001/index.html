@@ -630,7 +630,7 @@ Content-Length: 1222
             <span class="k">if</span> <span class="o">((</span><span class="n">start</span> <span class="o">!=</span> <span class="o">-</span><span class="n">1</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">end</span> <span class="o">!=</span> <span class="o">-</span><span class="n">1</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">count</span> <span class="o">==</span> <span class="n">0</span><span class="o">))</span> <span class="o">{</span>
                 <span class="n">String</span> <span class="n">var</span> <span class="o">=</span> <span class="n">expression</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">start</span> <span class="o">+</span> <span class="n">2</span><span class="o">,</span> <span class="n">end</span><span class="o">);</span>
 
-                <span class="c1">// 第一次循环时，var是 name，然后执行ognl表达式为password, 执行返回结果是%{1+1},
+                <span class="c1">// 第一次循环时，var是 password，执行返回结果是%{1+1},
 </span><span class="c1"></span>                <span class="c1">// 第二次循环时，var是 1+1, 然后成功执行我们的恶意ognl表达式
 </span><span class="c1"></span>                <span class="n">Object</span> <span class="n">o</span> <span class="o">=</span> <span class="n">stack</span><span class="o">.</span><span class="na">findValue</span><span class="o">(</span><span class="n">var</span><span class="o">,</span> <span class="n">asType</span><span class="o">);</span>
                 <span class="k">if</span> <span class="o">(</span><span class="n">evaluator</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
