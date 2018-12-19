@@ -104,26 +104,26 @@
   </url>
   
   <url>
-    <loc>https://dean2021.github.io/categories/golang/</loc>
-    <lastmod>2018-11-06T20:55:35+08:00</lastmod>
-    <priority>0</priority>
-  </url>
-  
-  <url>
     <loc>https://dean2021.github.io/tags/golang/</loc>
     <lastmod>2018-11-06T20:55:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://dean2021.github.io/categories/java/</loc>
-    <lastmod>2018-12-12T15:09:58+08:00</lastmod>
+    <loc>https://dean2021.github.io/categories/golang/</loc>
+    <lastmod>2018-11-06T20:55:35+08:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>https://dean2021.github.io/tags/java/</loc>
     <lastmod>2018-11-06T19:19:22+08:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>https://dean2021.github.io/categories/java/</loc>
+    <lastmod>2018-12-12T15:09:58+08:00</lastmod>
     <priority>0</priority>
   </url>
   
