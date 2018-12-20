@@ -47,6 +47,39 @@
   <div class="main" role="main">
     <section class="list section-list">
       <article class="article">
+        <a href="/posts/s2-045/" class="article-titles">
+          <h2 class="article-title">[经典回顾] S2-045漏洞的一些分析细节</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>November 21, 2018</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/java/">
+              <i class="fas fa-folder"></i>
+              java
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/struts2/">
+              <i class="fas fa-tag"></i>
+              struts2
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/rce/">
+              <i class="fas fa-tag"></i>
+              rce
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          0x01、为什么网上的s2-045漏洞分析文章和本地代码对不上？ 原因是由于版本不对：
+2.3.5 ~ 2.3.31 版本，漏洞出现位置： org.apache.struts2.dispatcher.multipart.JakartaMultiPartRequest类中的buildErrorMessage方法里，97行调用了LocalizedTextUtil.findText 2.5 ~ 2.
+        </div>
+        <div class="article-readmore"><a href="/posts/s2-045/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
         <a href="/posts/plan/" class="article-titles">
           <h2 class="article-title">2018年-研究计划清单</h2>
           

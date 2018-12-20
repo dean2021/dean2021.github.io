@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Struts2框架: S2-002 漏洞详细分析 - Dean&#39;s notes</title>
+  <meta property="og:title" content="Struts2框架: S2-002 漏洞详细分析 - Dean&#39;s notes" />
+  <meta name="twitter:title" content="Struts2框架: S2-002 漏洞详细分析 - Dean&#39;s notes" />
+  <meta name="description" content="0x00 前言 阅读本文需要具备的知识：
+ 熟悉J2EE开发, 主要是JSP开发 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:">
+  <meta property="og:description" content="0x00 前言 阅读本文需要具备的知识：
+ 熟悉J2EE开发, 主要是JSP开发 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:">
+  <meta name="twitter:description" content="0x00 前言 阅读本文需要具备的知识：
+ 熟悉J2EE开发, 主要是JSP开发 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:">
+  <meta name="author" content="Dean"/>
+  <meta property="og:site_name" content="Dean&#39;s notes" />
+  <meta property="og:url" content="https://dean2021.github.io/posts/s2-002/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.52" />
+
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">Dean&#39;s notes</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-home"><a href="/" title="Home">Home</a></li>
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-books"><a href="/books/" title="Books">Books</a></li>
+      <li class="site-navi-item-link"><a href="/link/" title="Links">Links</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+
+       <li class="site-navi-item-plan"><a href="/posts/plan/" title="plan">Plan</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Struts2框架: S2-002 漏洞详细分析</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>December 20, 2018</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/java/">
+            <i class="fas fa-folder"></i>
+            java
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-categories">
+          <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+            <i class="fas fa-folder"></i>
+            漏洞分析
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E7%BB%8F%E5%85%B8%E6%BC%8F%E6%B4%9E%E5%9B%9E%E9%A1%BE/">
+            <i class="fas fa-tag"></i>
+            经典漏洞回顾
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+
+      
+
+<h3 id="0x00-前言">0x00 前言</h3>
+
+<p>阅读本文需要具备的知识：</p>
+
+<ol>
+<li>熟悉J2EE开发, 主要是JSP开发</li>
+<li>了解Struts2框架执行流程</li>
+</ol>
+
+<h3 id="0x01-漏洞复现">0x01 漏洞复现</h3>
+
+<p>影响漏洞版本:</p>
+
+<blockquote>
+<p>Struts 2.0.0 - Struts 2.0.11</p>
+</blockquote>
+
+<p>漏洞靶机代码: (下方通过该代码进行分析, 务必下载本地对比运行)</p>
+
+<blockquote>
+<p><a href="https://github.com/dean2021/java_security_book/tree/master/Struts2/s2_002">https://github.com/dean2021/java_security_book/tree/master/Struts2/s2_002</a></p>
+</blockquote>
+
+<p>测试POC:</p>
+
+<pre><code>http://localhost:8080/index.action?&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;&quot;
+</code></pre>
+
+<p>请求响应内容:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+
+	<span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;//hello/hello_struts2.action?&#34;</span><span class="p">&gt;&lt;</span><span class="nt">script</span><span class="p">&gt;</span><span class="nx">alert</span><span class="p">(</span><span class="mi">1</span><span class="p">)&lt;/</span><span class="nt">script</span><span class="p">&gt;</span><span class="err">&lt;</span>&#34;=<span class="ni">&amp;amp;</span>%22%3E%3Cscript%3Ealert(1)%3C/script%3E%3C%22=&#34;&gt;ä½ å¥½Struts2<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span></code></pre></td></tr></table>
+</div>
+</div>
+<hr />
+
+<h3 id="0x02-漏洞分析">0x02 漏洞分析</h3>
+
+<p>通过官网安全公告 参考[1]，我们大概知道问题是出在 <s:url> 和<s:a>标签里,如下是我们的index.jsp部分代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-html" data-lang="html"><span class="cp">&lt;!DOCTYPE html PUBLIC 
+</span><span class="cp">	&#34;-//W3C//DTD XHTML 1.1 Transitional//EN&#34;
+</span><span class="cp">	&#34;http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd&#34;&gt;</span>
+	
+<span class="err">&lt;</span>%@taglib prefix=&#34;s&#34; uri=&#34;/struts-tags&#34; %&gt;
+
+<span class="p">&lt;</span><span class="nt">html</span> <span class="na">xmlns</span><span class="o">=</span><span class="s">&#34;http://www.w3.org/1999/xhtml&#34;</span> <span class="na">xml:lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span> <span class="na">lang</span><span class="o">=</span><span class="s">&#34;en&#34;</span><span class="p">&gt;</span>
+
+<span class="p">&lt;</span><span class="nt">body</span><span class="p">&gt;</span>
+	<span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&#34;&lt;s:url action=&#34;</span><span class="err">/</span><span class="na">hello</span><span class="err">/</span><span class="na">hello_struts2</span><span class="err">&#34;</span> <span class="na">includeParams</span><span class="o">=</span><span class="s">&#34;all&#34;</span> <span class="p">&gt;&lt;/</span><span class="nt">s:url</span><span class="p">&gt;</span>&#34;&gt;你好Struts2<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">body</span><span class="p">&gt;</span>
+<span class="p">&lt;/</span><span class="nt">html</span><span class="p">&gt;</span>
+	</code></pre></td></tr></table>
+</div>
+</div>
+<p>两个标签我们就分析<s:url>一个就行了，读过我上篇文章的同学应该知道我们先从找到标签的实现对象入手，这里就不多说了，由于s2的标签库都是集成与ComponentTagSupport类， doStartTag方法也是在该类里实现，所以我们直接从ComponentTagSupport类doStartTag方法进行断点调试, 首先我们看一下doStartTag方法：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">abstract</span> <span class="kd">class</span> <span class="nc">ComponentTagSupport</span> <span class="kd">extends</span> <span class="n">StrutsBodyTagSupport</span> <span class="o">{</span>
+
+	 <span class="kd">public</span> <span class="kt">int</span> <span class="nf">doStartTag</span><span class="o">()</span> <span class="kd">throws</span> <span class="n">JspException</span> <span class="o">{</span>
+
+	 	<span class="c1">// 实现子类是URL.class
+</span><span class="c1"></span>        <span class="k">this</span><span class="o">.</span><span class="na">component</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">getBean</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">getStack</span><span class="o">(),</span> <span class="o">(</span><span class="n">HttpServletRequest</span><span class="o">)</span><span class="k">this</span><span class="o">.</span><span class="na">pageContext</span><span class="o">.</span><span class="na">getRequest</span><span class="o">(),</span> <span class="o">(</span><span class="n">HttpServletResponse</span><span class="o">)</span><span class="k">this</span><span class="o">.</span><span class="na">pageContext</span><span class="o">.</span><span class="na">getResponse</span><span class="o">());</span>
+        <span class="n">Container</span> <span class="n">container</span> <span class="o">=</span> <span class="n">Dispatcher</span><span class="o">.</span><span class="na">getInstance</span><span class="o">().</span><span class="na">getContainer</span><span class="o">();</span>
+        <span class="n">container</span><span class="o">.</span><span class="na">inject</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">component</span><span class="o">);</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">populateParams</span><span class="o">();</span>
+
+        <span class="c1">// 跟进URL类的start方法实现
+</span><span class="c1"></span>        <span class="kt">boolean</span> <span class="n">evalBody</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">component</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">pageContext</span><span class="o">.</span><span class="na">getOut</span><span class="o">());</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">evalBody</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">component</span><span class="o">.</span><span class="na">usesBody</span><span class="o">()</span> <span class="o">?</span> <span class="n">2</span> <span class="o">:</span> <span class="n">1</span><span class="o">;</span>
+        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+            <span class="k">return</span> <span class="n">0</span><span class="o">;</span>
+        <span class="o">}</span>
+    <span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>跟进URL类的start方法实现：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">URL</span> <span class="kd">extends</span> <span class="n">Component</span> <span class="o">{</span>
+
+	<span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">start</span><span class="o">(</span><span class="n">Writer</span> <span class="n">writer</span><span class="o">)</span> <span class="o">{</span>
+	        <span class="kt">boolean</span> <span class="n">result</span> <span class="o">=</span> <span class="kd">super</span><span class="o">.</span><span class="na">start</span><span class="o">(</span><span class="n">writer</span><span class="o">);</span>
+	        <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+	            <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">findString</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">value</span><span class="o">);</span>
+	        <span class="o">}</span>
+
+	        <span class="k">try</span> <span class="o">{</span>
+
+	        	<span class="c1">// 我们在&lt;s:url&gt;这个标签内配置的includeParams=&#34;all&#34;
+</span><span class="c1"></span>	        	<span class="c1">// 关于这个属性介绍，参考2
+</span><span class="c1"></span>	            <span class="n">String</span> <span class="n">includeParams</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">urlIncludeParams</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">?</span> <span class="k">this</span><span class="o">.</span><span class="na">urlIncludeParams</span><span class="o">.</span><span class="na">toLowerCase</span><span class="o">()</span> <span class="o">:</span> <span class="s">&#34;get&#34;</span><span class="o">;</span>
+	            <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">includeParams</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+	                <span class="n">includeParams</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">findString</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">includeParams</span><span class="o">);</span>
+	            <span class="o">}</span>
+
+
+	            <span class="k">if</span> <span class="o">(</span><span class="s">&#34;none&#34;</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="n">includeParams</span><span class="o">))</span> <span class="o">{</span>
+	                <span class="k">this</span><span class="o">.</span><span class="na">mergeRequestParameters</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">value</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">parameters</span><span class="o">,</span> <span class="n">Collections</span><span class="o">.</span><span class="na">EMPTY_MAP</span><span class="o">);</span>
+	            <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(</span><span class="s">&#34;all&#34;</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="n">includeParams</span><span class="o">))</span> <span class="o">{</span>
+
+                    <span class="c1">// 我们跟进此方法的实现
+</span><span class="c1"></span>	                <span class="k">this</span><span class="o">.</span><span class="na">mergeRequestParameters</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">value</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">parameters</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">req</span><span class="o">.</span><span class="na">getParameterMap</span><span class="o">());</span>
+	                
+	                <span class="k">this</span><span class="o">.</span><span class="na">includeGetParameters</span><span class="o">();</span>
+	                <span class="k">this</span><span class="o">.</span><span class="na">includeExtraParameters</span><span class="o">();</span>
+	            <span class="o">}</span> <span class="k">else</span> <span class="k">if</span> <span class="o">(!</span><span class="s">&#34;get&#34;</span><span class="o">.</span><span class="na">equalsIgnoreCase</span><span class="o">(</span><span class="n">includeParams</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">includeParams</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">||</span> <span class="k">this</span><span class="o">.</span><span class="na">value</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">||</span> <span class="k">this</span><span class="o">.</span><span class="na">action</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">))</span> <span class="o">{</span>
+	                <span class="k">if</span> <span class="o">(</span><span class="n">includeParams</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
+	                    <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;Unknown value for includeParams parameter to URL tag: &#34;</span> <span class="o">+</span> <span class="n">includeParams</span><span class="o">);</span>
+	                <span class="o">}</span>
+	            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
+	                <span class="k">this</span><span class="o">.</span><span class="na">includeGetParameters</span><span class="o">();</span>
+	                <span class="k">this</span><span class="o">.</span><span class="na">includeExtraParameters</span><span class="o">();</span>
+	            <span class="o">}</span>
+	        <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">var4</span><span class="o">)</span> <span class="o">{</span>
+	            <span class="n">LOG</span><span class="o">.</span><span class="na">warn</span><span class="o">(</span><span class="s">&#34;Unable to put request parameters (&#34;</span> <span class="o">+</span> <span class="k">this</span><span class="o">.</span><span class="na">req</span><span class="o">.</span><span class="na">getQueryString</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;) into parameter map.&#34;</span><span class="o">,</span> <span class="n">var4</span><span class="o">);</span>
+	        <span class="o">}</span>
+
+	        <span class="k">return</span> <span class="n">result</span><span class="o">;</span>
+	    <span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>this.mergeRequestParameters(this.value, this.parameters, this.req.getParameterMap()); 跟进实现：</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">protected</span> <span class="kt">void</span> <span class="nf">mergeRequestParameters</span><span class="o">(</span><span class="n">String</span> <span class="n">value</span><span class="o">,</span> <span class="n">Map</span> <span class="n">parameters</span><span class="o">,</span> <span class="n">Map</span> <span class="n">contextParameters</span><span class="o">)</span> <span class="o">{</span>
+        <span class="n">Map</span> <span class="n">mergedParams</span> <span class="o">=</span> <span class="k">new</span> <span class="n">LinkedHashMap</span><span class="o">(</span><span class="n">contextParameters</span><span class="o">);</span>
+        <span class="k">if</span> <span class="o">(</span><span class="n">value</span> <span class="o">!=</span> <span class="kc">null</span> <span class="o">&amp;&amp;</span> <span class="n">value</span><span class="o">.</span><span class="na">trim</span><span class="o">().</span><span class="na">length</span><span class="o">()</span> <span class="o">&gt;</span> <span class="n">0</span> <span class="o">&amp;&amp;</span> <span class="n">value</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="s">&#34;?&#34;</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">new</span> <span class="n">LinkedHashMap</span><span class="o">();</span>
+            <span class="n">String</span> <span class="n">queryString</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="na">substring</span><span class="o">(</span><span class="n">value</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="s">&#34;?&#34;</span><span class="o">)</span> <span class="o">+</span> <span class="n">1</span><span class="o">);</span>
+            <span class="n">mergedParams</span> <span class="o">=</span> <span class="n">UrlHelper</span><span class="o">.</span><span class="na">parseQueryString</span><span class="o">(</span><span class="n">queryString</span><span class="o">);</span>
+            <span class="n">Iterator</span> <span class="n">iterator</span> <span class="o">=</span> <span class="n">contextParameters</span><span class="o">.</span><span class="na">entrySet</span><span class="o">().</span><span class="na">iterator</span><span class="o">();</span>
+
+            <span class="k">while</span><span class="o">(</span><span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+                <span class="n">Entry</span> <span class="n">entry</span> <span class="o">=</span> <span class="o">(</span><span class="n">Entry</span><span class="o">)</span><span class="n">iterator</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+                <span class="n">Object</span> <span class="n">key</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">();</span>
+                <span class="k">if</span> <span class="o">(!((</span><span class="n">Map</span><span class="o">)</span><span class="n">mergedParams</span><span class="o">).</span><span class="na">containsKey</span><span class="o">(</span><span class="n">key</span><span class="o">))</span> <span class="o">{</span>
+                    <span class="o">((</span><span class="n">Map</span><span class="o">)</span><span class="n">mergedParams</span><span class="o">).</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+                <span class="o">}</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+        <span class="n">Iterator</span> <span class="n">iterator</span> <span class="o">=</span> <span class="o">((</span><span class="n">Map</span><span class="o">)</span><span class="n">mergedParams</span><span class="o">).</span><span class="na">entrySet</span><span class="o">().</span><span class="na">iterator</span><span class="o">();</span>
+
+        <span class="k">while</span><span class="o">(</span><span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">())</span> <span class="o">{</span>
+            <span class="n">Entry</span> <span class="n">entry</span> <span class="o">=</span> <span class="o">(</span><span class="n">Entry</span><span class="o">)</span><span class="n">iterator</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
+            <span class="n">Object</span> <span class="n">key</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">();</span>
+            <span class="k">if</span> <span class="o">(!</span><span class="n">parameters</span><span class="o">.</span><span class="na">containsKey</span><span class="o">(</span><span class="n">key</span><span class="o">))</span> <span class="o">{</span>
+                <span class="n">parameters</span><span class="o">.</span><span class="na">put</span><span class="o">(</span><span class="n">key</span><span class="o">,</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">());</span>
+            <span class="o">}</span>
+        <span class="o">}</span>
+
+<span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>从方法明明上我们已经能够看得出该方法是合并参数，通过阅读代码该方法的第三个参数也就是HttpServletRequest对象getParameterMap(), HttpServletRequest是Servlet原生对象，那这个方法具体是用来做什么的呢？下方是官方解释:</p>
+
+<blockquote>
+<p>Returns a java.util.Map of the parameters of this request.</p>
+</blockquote>
+
+<p>也就是返回一个map类型的request参数。我们请求的是url是:</p>
+
+<pre><code>http://localhost:8080/index.action?&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;&quot;
+</code></pre>
+
+<p>那么解析后的map就是 ：
+KEY = <code>&quot;&gt;&lt;script&gt;alert(1)&lt;/script&gt;&lt;&quot;</code>
+VAL = &ldquo;&rdquo;
+然后进行参数合并, 并未看到对参数进行任何过滤，最后写入到html中，导致造成xss漏洞。</p>
+
+<blockquote>
+<p>TIPS: 经过测试HttpServletRequest对象getParameterMap()方法只会对参数值进行转换编码，并不会对参数名进行任何处理.</p>
+</blockquote>
+
+<h3 id="0x03-总结">0x03 总结：</h3>
+
+<pre><code>Struts2框架的&lt;s:url&gt;标签的includeParams属性设置为all的情况下，对url参数名未做过滤，导致xss漏洞。
+</code></pre>
+
+<h3 id="0x04-修复方案分析">0x04 修复方案分析：</h3>
+
+<p>根据公告，我们需要升级到Struts 2.0.11.1版本。</p>
+
+<p>经过对2.0.11.1的代码阅读，在UrlHelper类buildUrl方法里，第136行增加了如下修复代码:</p>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java">        <span class="c1">// link是最终的生成的url
+</span><span class="c1"></span>        <span class="k">for</span><span class="o">(</span><span class="n">result</span> <span class="o">=</span> <span class="n">link</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span> <span class="n">result</span><span class="o">.</span><span class="na">indexOf</span><span class="o">(</span><span class="s">&#34;&lt;script&gt;&#34;</span><span class="o">)</span> <span class="o">&gt;</span> <span class="n">0</span><span class="o">;</span> <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="na">replaceAll</span><span class="o">(</span><span class="s">&#34;&lt;script&gt;&#34;</span><span class="o">,</span> <span class="s">&#34;script&#34;</span><span class="o">))</span> <span class="o">{</span>
+
+        <span class="o">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<p>看到这样的修复，虽然很无语，但是站在没有web安全知识的程序员角度来看待这种修复方案，能这样写也是很正常，因为大部分程序员只知道JavaScript代码是在<code>&lt;script&gt;</code>标签中执行。</p>
+
+<p>好了，分析结束，附上一个bypass POC：</p>
+
+<pre><code>index.action?&quot;&gt;&lt;script 1&gt;alert(1)&lt;/script&gt;&quot;
+</code></pre>
+
+<p>下一篇S2-003应该就是修复这个问题吧。</p>
+
+<h3 id="0x06-引用">0x06 引用</h3>
+
+<ol>
+<li><a href="https://cwiki.apache.org/confluence/display/WW/S2-002">S2-002安全公告</a></li>
+<li><a href="https://blog.csdn.net/wnl_csdn/article/details/53444575">Struts2的url标签</a></li>
+</ol>
+
+    </article>
+
+
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer pager-noitem">&lt; Newer</li>
+      <li class="pager-older">
+        <a href="/posts/s2-001/" data-toggle="tooltip" data-placement="top" title="Struts2框架: S2-001 漏洞详细分析">Older &gt;</a>
+      </li>
+    </ul>
+
+          <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+var gitalk = new Gitalk({
+  clientID: '2f61b9423ddfde01f318',
+  clientSecret: 'ae6360004775eb79f1069c0ea047f2fcd0f8cfc7',
+  repo: 'dean2021.github.io',
+  owner: 'dean2021',
+  admin: ['dean2021'],
+  id: location.pathname,      
+  distractionFreeMode: false  
+})
+
+gitalk.render('gitalk-container')
+  </script>
+
+
+
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2018 Dean</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-about"><a href="/about/" title="About">About</a></li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>  and Dean
+  </div>
+</div>
+
+
+</body>
+</html>
