@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Struts2 OGNL沙箱历史绕过方式总结 - Dean&#39;s notes</title>
+  <meta property="og:title" content="Struts2 OGNL沙箱历史绕过方式总结 - Dean&#39;s notes" />
+  <meta name="twitter:title" content="Struts2 OGNL沙箱历史绕过方式总结 - Dean&#39;s notes" />
+  <meta name="description" content="沙箱绕过 s2-003 绕过方式: 1 2  #context[\&#39;xwork.MethodAccessor.denyMethodExecution\&#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET   s2-005 绕过方式： 1 2 3  #_memberAccess.">
+  <meta property="og:description" content="沙箱绕过 s2-003 绕过方式: 1 2  #context[\&#39;xwork.MethodAccessor.denyMethodExecution\&#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET   s2-005 绕过方式： 1 2 3  #_memberAccess.">
+  <meta name="twitter:description" content="沙箱绕过 s2-003 绕过方式: 1 2  #context[\&#39;xwork.MethodAccessor.denyMethodExecution\&#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET   s2-005 绕过方式： 1 2 3  #_memberAccess.">
+  <meta name="author" content="Dean"/>
+  <meta property="og:site_name" content="Dean&#39;s notes" />
+  <meta property="og:url" content="https://dean2021.github.io/posts/s2-bypass-sandbox/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.52" />
+
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">Dean&#39;s notes</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-home"><a href="/" title="Home">Home</a></li>
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-books"><a href="/books/" title="Books">Books</a></li>
+      <li class="site-navi-item-link"><a href="/link/" title="Links">Links</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+
+       <li class="site-navi-item-plan"><a href="/posts/plan/" title="plan">Plan</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Struts2 OGNL沙箱历史绕过方式总结</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>December 24, 2018</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/java/">
+            <i class="fas fa-folder"></i>
+            java
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-categories">
+          <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
+            <i class="fas fa-folder"></i>
+            漏洞分析
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E7%BB%8F%E5%85%B8%E6%BC%8F%E6%B4%9E%E5%9B%9E%E9%A1%BE/">
+            <i class="fas fa-tag"></i>
+            经典漏洞回顾
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+
+      
+
+<h3 id="沙箱绕过">沙箱绕过</h3>
+
+<h4 id="s2-003-绕过方式">s2-003 绕过方式:</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="err">#</span><span class="n">context</span><span class="o">[</span><span class="err">\&#39;</span><span class="n">xwork</span><span class="o">.</span><span class="na">MethodAccessor</span><span class="o">.</span><span class="na">denyMethodExecution</span><span class="err">\&#39;</span><span class="o">]=</span><span class="kc">false</span><span class="o">,</span> 
+<span class="err">#</span><span class="n">_memberAccess</span><span class="o">.</span><span class="na">excludeProperties</span><span class="o">=</span><span class="nd">@java.util.Collections@EMPTY_SET</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="s2-005-绕过方式">s2-005 绕过方式：</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="err">#</span><span class="n">_memberAccess</span><span class="o">.</span><span class="na">allowStaticMethodAccess</span><span class="o">=</span><span class="kc">true</span>
+<span class="err">#</span><span class="n">context</span><span class="o">[</span><span class="err">&#39;</span><span class="n">xwork</span><span class="o">.</span><span class="na">MethodAccessor</span><span class="o">.</span><span class="na">denyMethodExecution</span><span class="err">&#39;</span><span class="o">]=</span><span class="kc">false</span>
+<span class="err">#</span><span class="n">_memberAccess</span><span class="o">.</span><span class="na">excludeProperties</span><span class="o">=</span><span class="nd">@java.util.Collections@EMPTY_SET</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="s2-009-绕过方式">S2-009 绕过方式:</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="err">#</span><span class="n">context</span><span class="o">[</span><span class="s">&#34;xwork.MethodAccessor.denyMethodExecution&#34;</span><span class="o">]=</span> <span class="k">new</span> <span class="n">java</span><span class="o">.</span><span class="na">lang</span><span class="o">.</span><span class="na">Boolean</span><span class="o">(</span><span class="kc">false</span><span class="o">)</span>
+<span class="err">#</span><span class="n">_memberAccess</span><span class="o">[</span><span class="s">&#34;allowStaticMethodAccess&#34;</span><span class="o">]=</span><span class="kc">true</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="s2-013-绕过方式">S2-013 绕过方式:</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="err">#</span><span class="n">_memberAccess</span><span class="o">[</span><span class="s">&#34;allowStaticMethodAccess&#34;</span><span class="o">]=</span><span class="kc">true</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="s2-016-绕过方式">S2-016 绕过方式:</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">没有沙箱限制</span><span class="err">，</span><span class="n">直接执行OGNL表达式</span><span class="err">（</span><span class="n">TODO</span> <span class="n">未做深入研究</span><span class="err">）</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="s2-019-绕过方式">S2-019 绕过方式:</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="err">#</span><span class="n">f</span><span class="o">=</span><span class="err">#</span><span class="n">_memberAccess</span><span class="o">.</span><span class="na">getClass</span><span class="o">().</span><span class="na">getDeclaredField</span><span class="o">(</span><span class="err">&#39;</span><span class="n">allowStaticMethodAccess</span><span class="err">&#39;</span><span class="o">),</span>
+<span class="err">#</span><span class="n">f</span><span class="o">.</span><span class="na">setAccessible</span><span class="o">(</span><span class="kc">true</span><span class="o">),</span>
+<span class="err">#</span><span class="n">f</span><span class="o">.</span><span class="na">set</span><span class="o">(</span><span class="err">#</span><span class="n">_memberAccess</span><span class="o">,</span><span class="kc">true</span><span class="o">)</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="s2-032-绕过方式">S2-032 绕过方式:</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="err">#</span><span class="n">_memberAccess</span><span class="o">=</span><span class="nd">@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="s2-037-绕过方式">S2-037 绕过方式:</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="err">#</span><span class="n">_memberAccess</span><span class="o">=</span><span class="nd">@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="s2-045-绕过方式">S2-045 绕过方式:</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span><span class="lnt">4
+</span><span class="lnt">5
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="o">(</span><span class="err">#</span><span class="n">dm</span><span class="o">=</span><span class="nd">@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS</span><span class="o">).(</span>
+	<span class="err">#</span><span class="n">_memberAccess</span><span class="o">?(</span><span class="err">#</span><span class="n">_memberAccess</span><span class="o">=</span><span class="err">#</span><span class="n">dm</span><span class="o">):((</span><span class="err">#</span><span class="n">container</span><span class="o">=</span><span class="err">#</span><span class="n">context</span><span class="o">[</span><span class="err">&#39;</span><span class="n">com</span><span class="o">.</span><span class="na">opensymphony</span><span class="o">.</span><span class="na">xwork2</span><span class="o">.</span><span class="na">ActionContext</span><span class="o">.</span><span class="na">container</span><span class="err">&#39;</span><span class="o">]).</span>
+<span class="o">(</span><span class="err">#</span><span class="n">ognlUtil</span><span class="o">=</span><span class="err">#</span><span class="n">container</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="nd">@com.opensymphony.xwork2.ognl.OgnlUtil@class</span><span class="o">)).</span>
+<span class="o">(</span><span class="err">#</span><span class="n">ognlUtil</span><span class="o">.</span><span class="na">getExcludedPackageNames</span><span class="o">().</span><span class="na">clear</span><span class="o">()).</span>
+<span class="o">(</span><span class="err">#</span><span class="n">ognlUtil</span><span class="o">.</span><span class="na">getExcludedClasses</span><span class="o">().</span><span class="na">clear</span><span class="o">()).(</span><span class="err">#</span><span class="n">context</span><span class="o">.</span><span class="na">setMemberAccess</span><span class="o">(</span><span class="err">#</span><span class="n">dm</span><span class="o">))))</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="s2-046-绕过方式">S2-046 绕过方式:</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">和s2</span><span class="o">-</span><span class="n">045的绕过方式一致</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="s2-048-绕过方式">S2-048 绕过方式:</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="n">和s2</span><span class="o">-</span><span class="n">045的绕过方式一致</span></code></pre></td></tr></table>
+</div>
+</div>
+<h4 id="s2-057-绕过方式">S2-057 绕过方式:</h4>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">1
+</span><span class="lnt">2
+</span><span class="lnt">3
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-java" data-lang="java"><span class="o">(</span><span class="err">#</span><span class="n">context</span><span class="o">=</span><span class="err">#</span><span class="n">attr</span><span class="o">[</span><span class="err">&#39;</span><span class="n">struts</span><span class="o">.</span><span class="na">valueStack</span><span class="err">&#39;</span><span class="o">].</span><span class="na">context</span><span class="o">).(</span><span class="err">#</span><span class="n">container</span><span class="o">=</span><span class="err">#</span><span class="n">context</span><span class="o">[</span><span class="err">&#39;</span><span class="n">com</span><span class="o">.</span><span class="na">opensymphony</span><span class="o">.</span><span class="na">xwork2</span><span class="o">.</span><span class="na">ActionContext</span><span class="o">.</span><span class="na">container</span><span class="err">&#39;</span><span class="o">]).(</span><span class="err">#</span><span class="n">ognlUtil</span><span class="o">=</span><span class="err">#</span><span class="n">container</span><span class="o">.</span><span class="na">getInstance</span><span class="o">(</span><span class="nd">@com.opensymphony.xwork2.ognl.OgnlUtil@class</span><span class="o">)).(</span><span class="err">#</span><span class="n">ognlUtil</span><span class="o">.</span><span class="na">setExcludedClasses</span><span class="o">(</span><span class="err">&#39;&#39;</span><span class="o">)).(</span><span class="err">#</span><span class="n">ognlUtil</span><span class="o">.</span><span class="na">setExcludedPackageNames</span><span class="o">(</span><span class="err">&#39;&#39;</span><span class="o">))</span>
+
+<span class="o">(</span><span class="err">#</span><span class="n">context</span><span class="o">=</span><span class="err">#</span><span class="n">attr</span><span class="o">[</span><span class="err">&#39;</span><span class="n">struts</span><span class="o">.</span><span class="na">valueStack</span><span class="err">&#39;</span><span class="o">].</span><span class="na">context</span><span class="o">).(</span><span class="err">#</span><span class="n">context</span><span class="o">.</span><span class="na">setMemberAccess</span><span class="o">(</span><span class="nd">@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS</span><span class="o">))</span></code></pre></td></tr></table>
+</div>
+</div>
+<h3 id="引用">引用</h3>
+
+<ol>
+<li><a href="https://xz.aliyun.com/t/3395">作为武器的CVE-2018-11776：绕过Apache Struts 2.5.16 OGNL 沙箱</a></li>
+</ol>
+
+    </article>
+
+
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer pager-noitem">&lt; Newer</li>
+      <li class="pager-older">
+        <a href="/posts/s2-003/" data-toggle="tooltip" data-placement="top" title="Struts2框架: S2-003漏洞详细分析">Older &gt;</a>
+      </li>
+    </ul>
+
+          <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+var gitalk = new Gitalk({
+  clientID: '2f61b9423ddfde01f318',
+  clientSecret: 'ae6360004775eb79f1069c0ea047f2fcd0f8cfc7',
+  repo: 'dean2021.github.io',
+  owner: 'dean2021',
+  admin: ['dean2021'],
+  id: location.pathname,      
+  distractionFreeMode: false  
+})
+
+gitalk.render('gitalk-container')
+  </script>
+
+
+
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2018 Dean</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-about"><a href="/about/" title="About">About</a></li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>  and Dean
+  </div>
+</div>
+
+
+</body>
+</html>

@@ -7,10 +7,38 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>&amp;copy; Copyright 2018 Dean</copyright>
-    <lastBuildDate>Thu, 20 Dec 2018 18:25:19 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 24 Dec 2018 18:43:05 +0800</lastBuildDate>
     
 	<atom:link href="https://dean2021.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Struts2 OGNL沙箱历史绕过方式总结</title>
+      <link>https://dean2021.github.io/posts/s2-bypass-sandbox/</link>
+      <pubDate>Mon, 24 Dec 2018 18:43:05 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/s2-bypass-sandbox/</guid>
+      <description>沙箱绕过 s2-003 绕过方式: 1 2  #context[\&amp;#39;xwork.MethodAccessor.denyMethodExecution\&amp;#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET   s2-005 绕过方式： 1 2 3  #_memberAccess.</description>
+    </item>
+    
+    <item>
+      <title>Struts2框架: S2-003漏洞详细分析</title>
+      <link>https://dean2021.github.io/posts/s2-003/</link>
+      <pubDate>Mon, 24 Dec 2018 17:31:25 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/s2-003/</guid>
+      <description>0x00 前言 阅读本文需要具备的知识：
+ 熟悉J2EE开发, 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:</description>
+    </item>
+    
+    <item>
+      <title>Jenkins 安全研究</title>
+      <link>https://dean2021.github.io/posts/jenkins-security/</link>
+      <pubDate>Mon, 24 Dec 2018 16:05:58 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/jenkins-security/</guid>
+      <description> Jenkins 安全研究 一、Jenkins历史漏洞  Jenkins 任意文件读取漏洞分析 Jenkins 未授权远程代码执行漏洞分析(CVE-2017-1000353) Jenkins-LDAP (CVE-2016-9299) 反序列化漏洞分析 CVE-2018-1000861  二、相关资料  stapler框架文档  </description>
+    </item>
     
     <item>
       <title>Struts2框架: S2-002 漏洞详细分析</title>

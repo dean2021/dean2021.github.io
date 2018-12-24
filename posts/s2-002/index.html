@@ -384,7 +384,7 @@ VAL = &ldquo;&rdquo;
 
 <h3 id="0x04-修复方案分析">0x04 修复方案分析：</h3>
 
-<p>根据公告，我们需要升级到Struts 2.0.11.1版本。</p>
+<p>根据公告，我们需要升级到Struts 2.0.11.1版本。（但是没有真正解决修复漏洞）</p>
 
 <p>经过对2.0.11.1的代码阅读，在UrlHelper类buildUrl方法里，第136行增加了如下修复代码:</p>
 <div class="highlight"><div class="chroma">
@@ -408,7 +408,7 @@ VAL = &ldquo;&rdquo;
 <pre><code>index.action?&quot;&gt;&lt;script 1&gt;alert(1)&lt;/script&gt;&quot;
 </code></pre>
 
-<p>下一篇S2-003应该就是修复这个问题吧。</p>
+<p>升级到2.0.11.2依然没有修复.</p>
 
 <h3 id="0x06-引用">0x06 引用</h3>
 
@@ -423,7 +423,9 @@ VAL = &ldquo;&rdquo;
 
 
     <ul class="pager article-pager">
-      <li class="pager-newer pager-noitem">&lt; Newer</li>
+      <li class="pager-newer">
+          <a href="/posts/jenkins-security/" data-toggle="tooltip" data-placement="top" title="Jenkins 安全研究">&lt; Newer</a>
+      </li>
       <li class="pager-older">
         <a href="/posts/s2-001/" data-toggle="tooltip" data-placement="top" title="Struts2框架: S2-001 漏洞详细分析">Older &gt;</a>
       </li>

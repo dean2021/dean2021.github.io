@@ -7,10 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>&amp;copy; Copyright 2018 Dean</copyright>
-    <lastBuildDate>Thu, 20 Dec 2018 18:25:19 +0800</lastBuildDate>
+    <lastBuildDate>Mon, 24 Dec 2018 18:43:05 +0800</lastBuildDate>
     
 	<atom:link href="https://dean2021.github.io/tags/%E7%BB%8F%E5%85%B8%E6%BC%8F%E6%B4%9E%E5%9B%9E%E9%A1%BE/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Struts2 OGNL沙箱历史绕过方式总结</title>
+      <link>https://dean2021.github.io/posts/s2-bypass-sandbox/</link>
+      <pubDate>Mon, 24 Dec 2018 18:43:05 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/s2-bypass-sandbox/</guid>
+      <description>沙箱绕过 s2-003 绕过方式: 1 2  #context[\&amp;#39;xwork.MethodAccessor.denyMethodExecution\&amp;#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET   s2-005 绕过方式： 1 2 3  #_memberAccess.</description>
+    </item>
+    
+    <item>
+      <title>Struts2框架: S2-003漏洞详细分析</title>
+      <link>https://dean2021.github.io/posts/s2-003/</link>
+      <pubDate>Mon, 24 Dec 2018 17:31:25 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/s2-003/</guid>
+      <description>0x00 前言 阅读本文需要具备的知识：
+ 熟悉J2EE开发, 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:</description>
+    </item>
     
     <item>
       <title>Struts2框架: S2-002 漏洞详细分析</title>
