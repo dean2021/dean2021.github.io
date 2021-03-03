@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <title>Dean&#39;s notes</title>
-  <meta property="og:title" content="Dean&#39;s notes" />
-  <meta name="twitter:title" content="Dean&#39;s notes" />
+  <title>老路的博客</title>
+  <meta property="og:title" content="老路的博客" />
+  <meta name="twitter:title" content="老路的博客" />
   <meta name="author" content="Dean"/>
-  <meta property="og:site_name" content="Dean&#39;s notes" />
+  <meta property="og:site_name" content="老路的博客" />
   <meta property="og:url" content="https://dean2021.github.io/" />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
-  <meta name="generator" content="Hugo 0.52" />
-  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="Dean&#39;s notes" />
-  <link href="/index.xml" rel="feed" type="application/rss+xml" title="Dean&#39;s notes" />
+  <meta name="generator" content="Hugo 0.55.6" />
+  <link href="/index.xml" rel="alternate" type="application/rss+xml" title="老路的博客" />
+  <link href="/index.xml" rel="feed" type="application/rss+xml" title="老路的博客" />
 
   <link rel="stylesheet" href="/css/style.css" media="all" />
   <link rel="stylesheet" href="/css/syntax.css" media="all" />
@@ -28,7 +28,7 @@
 
 <header class="site-header">
   <nav class="site-navi">
-    <h1 class="site-title"><a href="/">Dean&#39;s notes</a></h1>
+    <h1 class="site-title"><a href="/">老路的博客</a></h1>
     <ul class="site-navi-items">
       <li class="site-navi-item-home"><a href="/" title="Home">Home</a></li>
       <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
@@ -47,100 +47,117 @@
   <div class="main" role="main">
     <section class="list home-list">
       <article class="article">
-        <a href="/posts/s2-bypass-sandbox/" class="article-titles">
-          <h2 class="article-title">Struts2 OGNL沙箱历史绕过方式总结</h2>
+        <a href="/posts/linux-privilege-escalation/" class="article-titles">
+          <h2 class="article-title">Linux 提权检测研究</h2>
           
         </a>
         <ul class="article-meta">
-          <li class="article-meta-date"><time>December 24, 2018</time></li>
+          <li class="article-meta-date"><time>January 20, 2021</time></li>
           <li class="article-meta-categories">
-            <a href="/categories/java/">
+            <a href="/categories/linux/">
               <i class="fas fa-folder"></i>
-              java
-            </a>&nbsp;
-          </li>
-          <li class="article-meta-categories">
-            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-              <i class="fas fa-folder"></i>
-              漏洞分析
+              linux
             </a>&nbsp;
           </li>
           <li class="article-meta-tags">
-            <a href="/tags/%E7%BB%8F%E5%85%B8%E6%BC%8F%E6%B4%9E%E5%9B%9E%E9%A1%BE/">
+            <a href="/tags/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">
               <i class="fas fa-tag"></i>
-              经典漏洞回顾
+              入侵检测
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E4%B8%BB%E6%9C%BA%E5%AE%89%E5%85%A8/">
+              <i class="fas fa-tag"></i>
+              主机安全
             </a>&nbsp;
           </li>
         </ul>
         <div class="article-content">
-          沙箱绕过 s2-003 绕过方式: 1 2  #context[\&#39;xwork.MethodAccessor.denyMethodExecution\&#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET   s2-005 绕过方式： 1 2 3  #_memberAccess.
+          作者：老路(Dean) 微信号：dean2029 （欢迎来撩） 文章来源：主机安全 （知识星球）  一、基于SUID提权检测 1.1、原理介绍 寻找具备suid权限的二进制程序文件，并且该文件需要具备自定义执行命令条件（如：nmap），或者该二进制程序存在漏洞，利用注入shellcode执行命令（如：缓冲区溢出漏洞）。（PS: 如果不能执行命令，读写文件也可以）
         </div>
-        <div class="article-readmore"><a href="/posts/s2-bypass-sandbox/">Read more...</a></div>
+        <div class="article-readmore"><a href="/posts/linux-privilege-escalation/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/linux-dns-hook/" class="article-titles">
+          <h2 class="article-title">Linux用户态Hook DNS方案</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>January 20, 2021</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/linux/">
+              <i class="fas fa-folder"></i>
+              linux
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">
+              <i class="fas fa-tag"></i>
+              入侵检测
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E4%B8%BB%E6%9C%BA%E5%AE%89%E5%85%A8/">
+              <i class="fas fa-tag"></i>
+              主机安全
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          作者：老路(Dean) 微信号：dean2029 （欢迎来撩） 文章来源：主机安全 （知识星球）  一、方案原理 NSSwitch（名称服务开关）是类Unix操作系统中的一项功能，它为通用配置数据库和名称解析机制提供了多种来源。这些源包括本地操作系统文件，域名系统，网络信息服务和LDAP。
+通过修改/etc/nsswitch.conf文件中hosts项加载顺序，加载我们自定义的nss插件[参考6]，即可hook到dns query.
+        </div>
+        <div class="article-readmore"><a href="/posts/linux-dns-hook/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/struts-bypass-sandbox/" class="article-titles">
+          <h2 class="article-title">Struts2 OGNL沙箱历史绕过方式总结</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>December 20, 2018</time></li>
+        </ul>
+        <div class="article-content">
+          沙箱绕过 s2-003 绕过方式:
+#context[\'xwork.MethodAccessor.denyMethodExecution\']=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET  s2-005 绕过方式：
+#_memberAccess.allowStaticMethodAccess=true #context['xwork.
+        </div>
+        <div class="article-readmore"><a href="/posts/struts-bypass-sandbox/">Read more...</a></div>
         <div class="article-floatclear"></div>
       </article>
       <article class="article">
         <a href="/posts/s2-003/" class="article-titles">
-          <h2 class="article-title">Struts2框架: S2-003漏洞详细分析</h2>
+          <h2 class="article-title">Struts2框架: S2-003 漏洞详细分析</h2>
           
         </a>
         <ul class="article-meta">
-          <li class="article-meta-date"><time>December 24, 2018</time></li>
+          <li class="article-meta-date"><time>December 19, 2018</time></li>
           <li class="article-meta-categories">
             <a href="/categories/java/">
               <i class="fas fa-folder"></i>
               java
             </a>&nbsp;
           </li>
-          <li class="article-meta-categories">
-            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-              <i class="fas fa-folder"></i>
-              漏洞分析
+          <li class="article-meta-tags">
+            <a href="/tags/struts2/">
+              <i class="fas fa-tag"></i>
+              struts2
             </a>&nbsp;
           </li>
           <li class="article-meta-tags">
-            <a href="/tags/%E7%BB%8F%E5%85%B8%E6%BC%8F%E6%B4%9E%E5%9B%9E%E9%A1%BE/">
+            <a href="/tags/rce/">
               <i class="fas fa-tag"></i>
-              经典漏洞回顾
+              rce
             </a>&nbsp;
           </li>
         </ul>
         <div class="article-content">
           0x00 前言 阅读本文需要具备的知识：
- 熟悉J2EE开发, 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:
+ 熟悉J2EE开发 了解Struts2框架执行流程  如果你不具备这些知识, 阅读这篇文章将会是一场艰难的旅行.
         </div>
         <div class="article-readmore"><a href="/posts/s2-003/">Read more...</a></div>
-        <div class="article-floatclear"></div>
-      </article>
-      <article class="article">
-        <a href="/posts/jenkins-security/" class="article-titles">
-          <h2 class="article-title">Jenkins 安全研究</h2>
-          
-        </a>
-        <ul class="article-meta">
-          <li class="article-meta-date"><time>December 24, 2018</time></li>
-        </ul>
-        <div class="article-content">
-          
-
-<h3 id="jenkins-安全研究">Jenkins 安全研究</h3>
-
-<h3 id="一-jenkins历史漏洞">一、Jenkins历史漏洞</h3>
-
-<ol>
-<li><a href="https://paper.seebug.org/648/">Jenkins 任意文件读取漏洞分析</a></li>
-<li><a href="https://paper.seebug.org/295/">Jenkins 未授权远程代码执行漏洞分析(CVE-2017-1000353)</a></li>
-<li><a href="https://paper.seebug.org/199/">Jenkins-LDAP (CVE-2016-9299) 反序列化漏洞分析</a></li>
-<li><a href="http://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-1000861">CVE-2018-1000861</a></li>
-</ol>
-
-<h3 id="二-相关资料">二、相关资料</h3>
-
-<ol>
-<li><a href="http://stapler.kohsuke.org/getting-started.html">stapler框架文档</a></li>
-</ol>
-
-        </div>
-        <div class="article-readmore"><a href="/posts/jenkins-security/">Read more...</a></div>
         <div class="article-floatclear"></div>
       </article>
       <article class="article">
@@ -149,29 +166,11 @@
           
         </a>
         <ul class="article-meta">
-          <li class="article-meta-date"><time>December 20, 2018</time></li>
-          <li class="article-meta-categories">
-            <a href="/categories/java/">
-              <i class="fas fa-folder"></i>
-              java
-            </a>&nbsp;
-          </li>
-          <li class="article-meta-categories">
-            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-              <i class="fas fa-folder"></i>
-              漏洞分析
-            </a>&nbsp;
-          </li>
-          <li class="article-meta-tags">
-            <a href="/tags/%E7%BB%8F%E5%85%B8%E6%BC%8F%E6%B4%9E%E5%9B%9E%E9%A1%BE/">
-              <i class="fas fa-tag"></i>
-              经典漏洞回顾
-            </a>&nbsp;
-          </li>
+          <li class="article-meta-date"><time>December 18, 2018</time></li>
         </ul>
         <div class="article-content">
           0x00 前言 阅读本文需要具备的知识：
- 熟悉J2EE开发, 主要是JSP开发 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:
+ 熟悉J2EE开发, 主要是JSP开发 了解Struts2框架执行流程  如果你不具备这些知识, 阅读这篇文章将会是一场艰难的旅行.
         </div>
         <div class="article-readmore"><a href="/posts/s2-002/">Read more...</a></div>
         <div class="article-floatclear"></div>
@@ -183,24 +182,6 @@
         </a>
         <ul class="article-meta">
           <li class="article-meta-date"><time>December 17, 2018</time></li>
-          <li class="article-meta-categories">
-            <a href="/categories/java/">
-              <i class="fas fa-folder"></i>
-              java
-            </a>&nbsp;
-          </li>
-          <li class="article-meta-categories">
-            <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-              <i class="fas fa-folder"></i>
-              漏洞分析
-            </a>&nbsp;
-          </li>
-          <li class="article-meta-tags">
-            <a href="/tags/%E7%BB%8F%E5%85%B8%E6%BC%8F%E6%B4%9E%E5%9B%9E%E9%A1%BE/">
-              <i class="fas fa-tag"></i>
-              经典漏洞回顾
-            </a>&nbsp;
-          </li>
         </ul>
         <div class="article-content">
           0x00 前言 阅读本文需要具备的知识：
@@ -336,38 +317,6 @@
         <div class="article-readmore"><a href="/posts/struts2-internals-readbook-note_06/">Read more...</a></div>
         <div class="article-floatclear"></div>
       </article>
-      <article class="article">
-        <a href="/posts/struts2-internals-readbook-note_04/" class="article-titles">
-          <h2 class="article-title">深入XWork设计原理</h2>
-          
-        </a>
-        <ul class="article-meta">
-          <li class="article-meta-date"><time>December 5, 2018</time></li>
-          <li class="article-meta-categories">
-            <a href="/categories/java/">
-              <i class="fas fa-folder"></i>
-              java
-            </a>&nbsp;
-          </li>
-          <li class="article-meta-categories">
-            <a href="/categories/struts2-%E6%8A%80%E6%9C%AF%E5%86%85%E5%B9%95/">
-              <i class="fas fa-folder"></i>
-              Struts2 技术内幕
-            </a>&nbsp;
-          </li>
-          <li class="article-meta-tags">
-            <a href="/tags/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">
-              <i class="fas fa-tag"></i>
-              读书笔记
-            </a>&nbsp;
-          </li>
-        </ul>
-        <div class="article-content">
-          0x01 基于人机交互的请求响应模式主要由哪三大要素构成 ？  沟通协议 请求内容 相应内容  0x02 在Java语言中 ，有哪三种主要的请求响应的实现模式 ？  参数-返回（Param-Return）模式.
-        </div>
-        <div class="article-readmore"><a href="/posts/struts2-internals-readbook-note_04/">Read more...</a></div>
-        <div class="article-floatclear"></div>
-      </article>
     </section>
     
 
@@ -380,6 +329,7 @@
     <li class="page-item disabled">
     <a href="" class="page-link" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
     </li>
+    
     
     
     

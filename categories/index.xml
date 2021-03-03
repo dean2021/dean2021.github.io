@@ -1,40 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on Dean&#39;s notes</title>
+    <title>Categories on 老路的博客</title>
     <link>https://dean2021.github.io/categories/</link>
-    <description>Recent content in Categories on Dean&#39;s notes</description>
+    <description>Recent content in Categories on 老路的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>&amp;copy; Copyright 2018 Dean</copyright>
+    <lastBuildDate>Wed, 20 Jan 2021 16:08:55 +0800</lastBuildDate>
     
 	<atom:link href="https://dean2021.github.io/categories/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Golang</title>
-      <link>https://dean2021.github.io/categories/golang/</link>
-      <pubDate>Tue, 06 Nov 2018 20:55:35 +0800</pubDate>
+      <title>linux</title>
+      <link>https://dean2021.github.io/categories/linux/</link>
+      <pubDate>Wed, 20 Jan 2021 16:08:55 +0800</pubDate>
       
-      <guid>https://dean2021.github.io/categories/golang/</guid>
+      <guid>https://dean2021.github.io/categories/linux/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Java</title>
+      <title>java</title>
       <link>https://dean2021.github.io/categories/java/</link>
-      <pubDate>Mon, 24 Dec 2018 18:43:05 +0800</pubDate>
+      <pubDate>Wed, 19 Dec 2018 16:08:55 +0800</pubDate>
       
       <guid>https://dean2021.github.io/categories/java/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>Plan</title>
-      <link>https://dean2021.github.io/categories/plan/</link>
-      <pubDate>Thu, 15 Nov 2018 15:14:31 +0800</pubDate>
-      
-      <guid>https://dean2021.github.io/categories/plan/</guid>
       <description></description>
     </item>
     
@@ -48,11 +40,20 @@
     </item>
     
     <item>
-      <title>漏洞分析</title>
-      <link>https://dean2021.github.io/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/</link>
-      <pubDate>Mon, 24 Dec 2018 18:43:05 +0800</pubDate>
+      <title>Plan</title>
+      <link>https://dean2021.github.io/categories/plan/</link>
+      <pubDate>Thu, 15 Nov 2018 15:14:31 +0800</pubDate>
       
-      <guid>https://dean2021.github.io/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/</guid>
+      <guid>https://dean2021.github.io/categories/plan/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>golang</title>
+      <link>https://dean2021.github.io/categories/golang/</link>
+      <pubDate>Tue, 06 Nov 2018 20:55:35 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/categories/golang/</guid>
       <description></description>
     </item>
     

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>主机安全 on 老路的博客</title>
+    <link>https://dean2021.github.io/tags/%E4%B8%BB%E6%9C%BA%E5%AE%89%E5%85%A8/</link>
+    <description>Recent content in 主机安全 on 老路的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en</language>
+    <copyright>&amp;copy; Copyright 2018 Dean</copyright>
+    <lastBuildDate>Wed, 20 Jan 2021 16:08:55 +0800</lastBuildDate>
+    
+	<atom:link href="https://dean2021.github.io/tags/%E4%B8%BB%E6%9C%BA%E5%AE%89%E5%85%A8/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Linux 提权检测研究</title>
+      <link>https://dean2021.github.io/posts/linux-privilege-escalation/</link>
+      <pubDate>Wed, 20 Jan 2021 16:08:55 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/linux-privilege-escalation/</guid>
+      <description>作者：老路(Dean) 微信号：dean2029 （欢迎来撩） 文章来源：主机安全 （知识星球）  一、基于SUID提权检测 1.1、原理介绍 寻找具备suid权限的二进制程序文件，并且该文件需要具备自定义执行命令条件（如：nmap），或者该二进制程序存在漏洞，利用注入shellcode执行命令（如：缓冲区溢出漏洞）。（PS: 如果不能执行命令，读写文件也可以）</description>
+    </item>
+    
+    <item>
+      <title>Linux用户态Hook DNS方案</title>
+      <link>https://dean2021.github.io/posts/linux-dns-hook/</link>
+      <pubDate>Wed, 20 Jan 2021 16:08:55 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/linux-dns-hook/</guid>
+      <description>作者：老路(Dean) 微信号：dean2029 （欢迎来撩） 文章来源：主机安全 （知识星球）  一、方案原理 NSSwitch（名称服务开关）是类Unix操作系统中的一项功能，它为通用配置数据库和名称解析机制提供了多种来源。这些源包括本地操作系统文件，域名系统，网络信息服务和LDAP。
+通过修改/etc/nsswitch.conf文件中hosts项加载顺序，加载我们自定义的nss插件[参考6]，即可hook到dns query.</description>
+    </item>
+    
+  </channel>
+</rss>

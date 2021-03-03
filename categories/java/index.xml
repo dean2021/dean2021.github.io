@@ -1,54 +1,25 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Java on Dean&#39;s notes</title>
+    <title>java on 老路的博客</title>
     <link>https://dean2021.github.io/categories/java/</link>
-    <description>Recent content in Java on Dean&#39;s notes</description>
+    <description>Recent content in java on 老路的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>&amp;copy; Copyright 2018 Dean</copyright>
-    <lastBuildDate>Mon, 24 Dec 2018 18:43:05 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 19 Dec 2018 16:08:55 +0800</lastBuildDate>
     
 	<atom:link href="https://dean2021.github.io/categories/java/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Struts2 OGNL沙箱历史绕过方式总结</title>
-      <link>https://dean2021.github.io/posts/s2-bypass-sandbox/</link>
-      <pubDate>Mon, 24 Dec 2018 18:43:05 +0800</pubDate>
-      
-      <guid>https://dean2021.github.io/posts/s2-bypass-sandbox/</guid>
-      <description>沙箱绕过 s2-003 绕过方式: 1 2  #context[\&amp;#39;xwork.MethodAccessor.denyMethodExecution\&amp;#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET   s2-005 绕过方式： 1 2 3  #_memberAccess.</description>
-    </item>
-    
-    <item>
-      <title>Struts2框架: S2-003漏洞详细分析</title>
+      <title>Struts2框架: S2-003 漏洞详细分析</title>
       <link>https://dean2021.github.io/posts/s2-003/</link>
-      <pubDate>Mon, 24 Dec 2018 17:31:25 +0800</pubDate>
+      <pubDate>Wed, 19 Dec 2018 16:08:55 +0800</pubDate>
       
       <guid>https://dean2021.github.io/posts/s2-003/</guid>
       <description>0x00 前言 阅读本文需要具备的知识：
- 熟悉J2EE开发, 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:</description>
-    </item>
-    
-    <item>
-      <title>Struts2框架: S2-002 漏洞详细分析</title>
-      <link>https://dean2021.github.io/posts/s2-002/</link>
-      <pubDate>Thu, 20 Dec 2018 18:25:19 +0800</pubDate>
-      
-      <guid>https://dean2021.github.io/posts/s2-002/</guid>
-      <description>0x00 前言 阅读本文需要具备的知识：
- 熟悉J2EE开发, 主要是JSP开发 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:</description>
-    </item>
-    
-    <item>
-      <title>Struts2框架: S2-001 漏洞详细分析</title>
-      <link>https://dean2021.github.io/posts/s2-001/</link>
-      <pubDate>Mon, 17 Dec 2018 16:08:55 +0800</pubDate>
-      
-      <guid>https://dean2021.github.io/posts/s2-001/</guid>
-      <description>0x00 前言 阅读本文需要具备的知识：
- 熟悉J2EE开发, 主要是JSP开发 了解Struts2框架执行流程 了解Ognl表达式  如果你不具备这些知识, 阅读这篇文章将会是一场艰难的旅行.</description>
+ 熟悉J2EE开发 了解Struts2框架执行流程  如果你不具备这些知识, 阅读这篇文章将会是一场艰难的旅行.</description>
     </item>
     
     <item>

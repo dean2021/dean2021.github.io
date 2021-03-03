@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>linux - 老路的博客</title>
+  <meta property="og:title" content="linux - 老路的博客" />
+  <meta name="twitter:title" content="linux - 老路的博客" />
+  <meta name="author" content="Dean"/>
+  <meta property="og:site_name" content="老路的博客" />
+  <meta property="og:url" content="https://dean2021.github.io/categories/linux/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.55.6" />
+  <link href="/categories/linux/index.xml" rel="alternate" type="application/rss+xml" title="老路的博客" />
+  <link href="/categories/linux/index.xml" rel="feed" type="application/rss+xml" title="老路的博客" />
+
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">老路的博客</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-home"><a href="/" title="Home">Home</a></li>
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-books"><a href="/books/" title="Books">Books</a></li>
+      <li class="site-navi-item-link"><a href="/link/" title="Links">Links</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+
+       <li class="site-navi-item-plan"><a href="/posts/plan/" title="plan">Plan</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <section class="list taxonomy-list">
+      <article class="article">
+        <a href="/posts/linux-privilege-escalation/" class="article-titles">
+          <h2 class="article-title">Linux 提权检测研究</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>January 20, 2021</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/linux/">
+              <i class="fas fa-folder"></i>
+              linux
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">
+              <i class="fas fa-tag"></i>
+              入侵检测
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E4%B8%BB%E6%9C%BA%E5%AE%89%E5%85%A8/">
+              <i class="fas fa-tag"></i>
+              主机安全
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          作者：老路(Dean) 微信号：dean2029 （欢迎来撩） 文章来源：主机安全 （知识星球）  一、基于SUID提权检测 1.1、原理介绍 寻找具备suid权限的二进制程序文件，并且该文件需要具备自定义执行命令条件（如：nmap），或者该二进制程序存在漏洞，利用注入shellcode执行命令（如：缓冲区溢出漏洞）。（PS: 如果不能执行命令，读写文件也可以）
+        </div>
+        <div class="article-readmore"><a href="/posts/linux-privilege-escalation/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+      <article class="article">
+        <a href="/posts/linux-dns-hook/" class="article-titles">
+          <h2 class="article-title">Linux用户态Hook DNS方案</h2>
+          
+        </a>
+        <ul class="article-meta">
+          <li class="article-meta-date"><time>January 20, 2021</time></li>
+          <li class="article-meta-categories">
+            <a href="/categories/linux/">
+              <i class="fas fa-folder"></i>
+              linux
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">
+              <i class="fas fa-tag"></i>
+              入侵检测
+            </a>&nbsp;
+          </li>
+          <li class="article-meta-tags">
+            <a href="/tags/%E4%B8%BB%E6%9C%BA%E5%AE%89%E5%85%A8/">
+              <i class="fas fa-tag"></i>
+              主机安全
+            </a>&nbsp;
+          </li>
+        </ul>
+        <div class="article-content">
+          作者：老路(Dean) 微信号：dean2029 （欢迎来撩） 文章来源：主机安全 （知识星球）  一、方案原理 NSSwitch（名称服务开关）是类Unix操作系统中的一项功能，它为通用配置数据库和名称解析机制提供了多种来源。这些源包括本地操作系统文件，域名系统，网络信息服务和LDAP。
+通过修改/etc/nsswitch.conf文件中hosts项加载顺序，加载我们自定义的nss插件[参考6]，即可hook到dns query.
+        </div>
+        <div class="article-readmore"><a href="/posts/linux-dns-hook/">Read more...</a></div>
+        <div class="article-floatclear"></div>
+      </article>
+    </section>
+    
+
+  </div>
+
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2018 Dean</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-rsslink">
+      <a href="/categories/linux/index.xml" type="application/rss+xml" target="_blank" title="RSS">
+        <i class="fas fa-rss"></i>
+      </a>
+    </li>
+    <li class="site-footer-item-about"><a href="/about/" title="About">About</a></li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>  and Dean
+  </div>
+</div>
+
+
+</body>
+</html>

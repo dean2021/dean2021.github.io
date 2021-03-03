@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <title>Struts2 运行流程分析之doFilter - Dean&#39;s notes</title>
-  <meta property="og:title" content="Struts2 运行流程分析之doFilter - Dean&#39;s notes" />
-  <meta name="twitter:title" content="Struts2 运行流程分析之doFilter - Dean&#39;s notes" />
+  <title>Struts2 运行流程分析之doFilter - 老路的博客</title>
+  <meta property="og:title" content="Struts2 运行流程分析之doFilter - 老路的博客" />
+  <meta name="twitter:title" content="Struts2 运行流程分析之doFilter - 老路的博客" />
   <meta name="description" content="注意: 本文基于Struts2.2.1版本进行的代码分析
  首先先大致看一下StrutsPrepareAndExecuteFilter.java的doFilter的实现
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 42 43 44 45  public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException { HttpServletRequest request = (HttpServletRequest) req; HttpServletResponse response = (HttpServletResponse) res; try { // 设置request/response编码  prepare.">
@@ -16,11 +16,11 @@
  首先先大致看一下StrutsPrepareAndExecuteFilter.java的doFilter的实现
 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 36 37 38 39 40 41 …">
   <meta name="author" content="Dean"/>
-  <meta property="og:site_name" content="Dean&#39;s notes" />
+  <meta property="og:site_name" content="老路的博客" />
   <meta property="og:url" content="https://dean2021.github.io/posts/struts2-internals-readbook-note_07/" />
   <meta property="og:type" content="article" />
   <meta name="twitter:card" content="summary" />
-  <meta name="generator" content="Hugo 0.52" />
+  <meta name="generator" content="Hugo 0.55.6" />
 
   <link rel="stylesheet" href="/css/style.css" media="all" />
   <link rel="stylesheet" href="/css/syntax.css" media="all" />
@@ -35,7 +35,7 @@
 
 <header class="site-header">
   <nav class="site-navi">
-    <h1 class="site-title"><a href="/">Dean&#39;s notes</a></h1>
+    <h1 class="site-title"><a href="/">老路的博客</a></h1>
     <ul class="site-navi-items">
       <li class="site-navi-item-home"><a href="/" title="Home">Home</a></li>
       <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>

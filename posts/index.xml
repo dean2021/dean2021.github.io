@@ -1,53 +1,65 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on Dean&#39;s notes</title>
+    <title>Posts on 老路的博客</title>
     <link>https://dean2021.github.io/posts/</link>
-    <description>Recent content in Posts on Dean&#39;s notes</description>
+    <description>Recent content in Posts on 老路的博客</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en</language>
     <copyright>&amp;copy; Copyright 2018 Dean</copyright>
-    <lastBuildDate>Mon, 24 Dec 2018 18:43:05 +0800</lastBuildDate>
+    <lastBuildDate>Wed, 20 Jan 2021 16:08:55 +0800</lastBuildDate>
     
 	<atom:link href="https://dean2021.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Struts2 OGNL沙箱历史绕过方式总结</title>
-      <link>https://dean2021.github.io/posts/s2-bypass-sandbox/</link>
-      <pubDate>Mon, 24 Dec 2018 18:43:05 +0800</pubDate>
+      <title>Linux 提权检测研究</title>
+      <link>https://dean2021.github.io/posts/linux-privilege-escalation/</link>
+      <pubDate>Wed, 20 Jan 2021 16:08:55 +0800</pubDate>
       
-      <guid>https://dean2021.github.io/posts/s2-bypass-sandbox/</guid>
-      <description>沙箱绕过 s2-003 绕过方式: 1 2  #context[\&amp;#39;xwork.MethodAccessor.denyMethodExecution\&amp;#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET   s2-005 绕过方式： 1 2 3  #_memberAccess.</description>
+      <guid>https://dean2021.github.io/posts/linux-privilege-escalation/</guid>
+      <description>作者：老路(Dean) 微信号：dean2029 （欢迎来撩） 文章来源：主机安全 （知识星球）  一、基于SUID提权检测 1.1、原理介绍 寻找具备suid权限的二进制程序文件，并且该文件需要具备自定义执行命令条件（如：nmap），或者该二进制程序存在漏洞，利用注入shellcode执行命令（如：缓冲区溢出漏洞）。（PS: 如果不能执行命令，读写文件也可以）</description>
     </item>
     
     <item>
-      <title>Struts2框架: S2-003漏洞详细分析</title>
+      <title>Linux用户态Hook DNS方案</title>
+      <link>https://dean2021.github.io/posts/linux-dns-hook/</link>
+      <pubDate>Wed, 20 Jan 2021 16:08:55 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/linux-dns-hook/</guid>
+      <description>作者：老路(Dean) 微信号：dean2029 （欢迎来撩） 文章来源：主机安全 （知识星球）  一、方案原理 NSSwitch（名称服务开关）是类Unix操作系统中的一项功能，它为通用配置数据库和名称解析机制提供了多种来源。这些源包括本地操作系统文件，域名系统，网络信息服务和LDAP。
+通过修改/etc/nsswitch.conf文件中hosts项加载顺序，加载我们自定义的nss插件[参考6]，即可hook到dns query.</description>
+    </item>
+    
+    <item>
+      <title>Struts2 OGNL沙箱历史绕过方式总结</title>
+      <link>https://dean2021.github.io/posts/struts-bypass-sandbox/</link>
+      <pubDate>Thu, 20 Dec 2018 16:08:55 +0800</pubDate>
+      
+      <guid>https://dean2021.github.io/posts/struts-bypass-sandbox/</guid>
+      <description>沙箱绕过 s2-003 绕过方式:
+#context[\&#39;xwork.MethodAccessor.denyMethodExecution\&#39;]=false, #_memberAccess.excludeProperties=@java.util.Collections@EMPTY_SET  s2-005 绕过方式：
+#_memberAccess.allowStaticMethodAccess=true #context[&#39;xwork.</description>
+    </item>
+    
+    <item>
+      <title>Struts2框架: S2-003 漏洞详细分析</title>
       <link>https://dean2021.github.io/posts/s2-003/</link>
-      <pubDate>Mon, 24 Dec 2018 17:31:25 +0800</pubDate>
+      <pubDate>Wed, 19 Dec 2018 16:08:55 +0800</pubDate>
       
       <guid>https://dean2021.github.io/posts/s2-003/</guid>
       <description>0x00 前言 阅读本文需要具备的知识：
- 熟悉J2EE开发, 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:</description>
-    </item>
-    
-    <item>
-      <title>Jenkins 安全研究</title>
-      <link>https://dean2021.github.io/posts/jenkins-security/</link>
-      <pubDate>Mon, 24 Dec 2018 16:05:58 +0800</pubDate>
-      
-      <guid>https://dean2021.github.io/posts/jenkins-security/</guid>
-      <description> Jenkins 安全研究 一、Jenkins历史漏洞  Jenkins 任意文件读取漏洞分析 Jenkins 未授权远程代码执行漏洞分析(CVE-2017-1000353) Jenkins-LDAP (CVE-2016-9299) 反序列化漏洞分析 CVE-2018-1000861  二、相关资料  stapler框架文档  </description>
+ 熟悉J2EE开发 了解Struts2框架执行流程  如果你不具备这些知识, 阅读这篇文章将会是一场艰难的旅行.</description>
     </item>
     
     <item>
       <title>Struts2框架: S2-002 漏洞详细分析</title>
       <link>https://dean2021.github.io/posts/s2-002/</link>
-      <pubDate>Thu, 20 Dec 2018 18:25:19 +0800</pubDate>
+      <pubDate>Tue, 18 Dec 2018 16:08:55 +0800</pubDate>
       
       <guid>https://dean2021.github.io/posts/s2-002/</guid>
       <description>0x00 前言 阅读本文需要具备的知识：
- 熟悉J2EE开发, 主要是JSP开发 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:</description>
+ 熟悉J2EE开发, 主要是JSP开发 了解Struts2框架执行流程  如果你不具备这些知识, 阅读这篇文章将会是一场艰难的旅行.</description>
     </item>
     
     <item>

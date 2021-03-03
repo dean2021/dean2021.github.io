@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <title>Linux用户态Hook DNS方案 - 老路的博客</title>
+  <meta property="og:title" content="Linux用户态Hook DNS方案 - 老路的博客" />
+  <meta name="twitter:title" content="Linux用户态Hook DNS方案 - 老路的博客" />
+  <meta name="description" content="作者：老路(Dean) 微信号：dean2029 （欢迎来撩） 文章来源：主机安全 （知识星球）  一、方案原理 NSSwitch（名称服务开关）是类Unix操作系统中的一项功能，它为通用配置数据库和名称解析机制提供了多种来源。这些源包括本地操作系统文件，域名系统，网络信息服务和LDAP。
+通过修改/etc/nsswitch.conf文件中hosts项加载顺序，加载我们自定义的nss插件[参考6]，即可hook到dns query.">
+  <meta property="og:description" content="作者：老路(Dean) 微信号：dean2029 （欢迎来撩） 文章来源：主机安全 （知识星球）  一、方案原理 NSSwitch（名称服务开关）是类Unix操作系统中的一项功能，它为通用配置数据库和名称解析机制提供了多种来源。这些源包括本地操作系统文件，域名系统，网络信息服务和LDAP。
+通过修改/etc/nsswitch.conf文件中hosts项加载顺序，加载我们自定义的nss插件[参考6]，即可hook到dns query.">
+  <meta name="twitter:description" content="作者：老路(Dean) 微信号：dean2029 （欢迎来撩） 文章来源：主机安全 （知识星球）  一、方案原理 NSSwitch（名称服务开关）是类Unix操作系统中的一项功能，它为通用配置数据库和名称解析机制提供了多种来源。这些源包括本地操作系统文件，域名系统，网络信息服务和LDAP。
+通过修改/etc/nsswitch.conf文件中hosts项加载顺序，加载我们自定义的nss插件[参 …">
+  <meta name="author" content="Dean"/>
+  <meta property="og:site_name" content="老路的博客" />
+  <meta property="og:url" content="https://dean2021.github.io/posts/linux-dns-hook/" />
+  <meta property="og:type" content="article" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="generator" content="Hugo 0.55.6" />
+
+  <link rel="stylesheet" href="/css/style.css" media="all" />
+  <link rel="stylesheet" href="/css/syntax.css" media="all" />
+  <link rel="stylesheet" href="/css/custom.css" media="all" />
+
+  <script src="/js/script.js"></script>
+  <script src="/js/custom.js"></script>
+  <script defer src="/js/fontawesome.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+  <nav class="site-navi">
+    <h1 class="site-title"><a href="/">老路的博客</a></h1>
+    <ul class="site-navi-items">
+      <li class="site-navi-item-home"><a href="/" title="Home">Home</a></li>
+      <li class="site-navi-item-categories"><a href="/categories/" title="Categories">Categories</a></li>
+      <li class="site-navi-item-tags"><a href="/tags/" title="Tags">Tags</a></li>
+      <li class="site-navi-item-archives"><a href="/archives/" title="Archives">Archives</a></li>
+      <li class="site-navi-item-books"><a href="/books/" title="Books">Books</a></li>
+      <li class="site-navi-item-link"><a href="/link/" title="Links">Links</a></li>
+      <li class="site-navi-item-about"><a href="/about/" title="About">About</a></li>
+
+       <li class="site-navi-item-plan"><a href="/posts/plan/" title="plan">Plan</a></li>
+    </ul>
+  </nav>
+</header>
+<hr class="site-header-bottom">
+
+  <div class="main" role="main">
+    <article class="article">
+      
+      
+      <h1 class="article-title">Linux用户态Hook DNS方案</h1>
+      
+      <hr class="article-title-bottom">
+      <ul class="article-meta">
+        <li class="article-meta-date"><time>January 20, 2021</time></li>
+        <li class="article-meta-categories">
+          <a href="/categories/linux/">
+            <i class="fas fa-folder"></i>
+            linux
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E5%85%A5%E4%BE%B5%E6%A3%80%E6%B5%8B/">
+            <i class="fas fa-tag"></i>
+            入侵检测
+          </a>&nbsp;
+        </li>
+        <li class="article-meta-tags">
+          <a href="/tags/%E4%B8%BB%E6%9C%BA%E5%AE%89%E5%85%A8/">
+            <i class="fas fa-tag"></i>
+            主机安全
+          </a>&nbsp;
+        </li>
+      </ul>
+      
+
+      
+
+<pre><code>作者：老路(Dean)  
+微信号：dean2029  （欢迎来撩）
+文章来源：主机安全 （知识星球）
+</code></pre>
+
+<h2 id="一-方案原理">一、方案原理</h2>
+
+<p>NSSwitch（名称服务开关）是类Unix操作系统中的一项功能，它为通用配置数据库和名称解析机制提供了多种来源。这些源包括本地操作系统文件，域名系统，网络信息服务和LDAP。</p>
+
+<p>通过修改/etc/nsswitch.conf文件中hosts项加载顺序，加载我们自定义的nss插件[参考6]，即可hook到dns query.</p>
+
+<p>/etc/nsswitch.conf文件内容如下：</p>
+
+<pre><code>#
+# /etc/nsswitch.conf
+#
+# An example Name Service Switch config file. This file should be
+# sorted with the most-used services at the beginning.
+#
+# The entry '[NOTFOUND=return]' means that the search for an
+# entry should stop if the search in the previous entry turned
+# up nothing. Note that if the search failed due to some other reason
+# (like no NIS server responding) then the search continues with the
+# next entry.
+#
+# Valid entries include:
+#
+#       nisplus                 Use NIS+ (NIS version 3)
+#       nis                     Use NIS (NIS version 2), also called YP
+#       dns                     Use DNS (Domain Name Service)
+#       files                   Use the local files
+#       db                      Use the local database (.db) files
+#       compat                  Use NIS on compat mode
+#       hesiod                  Use Hesiod for user lookups
+#       [NOTFOUND=return]       Stop searching if not found so far
+#
+
+# To use db, put the &quot;db&quot; in front of &quot;files&quot; for entries you want to be
+# looked up first in the databases
+#
+# Example:
+#passwd:    db files nisplus nis
+#shadow:    db files nisplus nis
+#group:     db files nisplus nis
+
+passwd:     files sss
+shadow:     files sss
+group:      files sss
+#initgroups: files sss
+
+#hosts:     db files nisplus nis dns
+hosts:     files dns myhostname
+
+# Example - obey only what nisplus tells us...
+#services:   nisplus [NOTFOUND=return] files
+#networks:   nisplus [NOTFOUND=return] files
+#protocols:  nisplus [NOTFOUND=return] files
+#rpc:        nisplus [NOTFOUND=return] files
+#ethers:     nisplus [NOTFOUND=return] files
+#netmasks:   nisplus [NOTFOUND=return] files     
+
+bootparams: nisplus [NOTFOUND=return] files
+
+ethers:     files
+netmasks:   files
+networks:   files
+protocols:  files
+rpc:        files
+services:   files sss
+</code></pre>
+
+<p>我们只关注hosts项</p>
+
+<pre><code>hosts:     files dns myhostname
+</code></pre>
+
+<p>这里的files、dns、myhostname分别代表如下图所示，每一项都是一个nss插件.
+<img src="https://cdn.nlark.com/yuque/0/2021/png/244636/1611144742428-802d70cd-2bff-4b59-8a0a-3862ee76afc0.png#align=left&amp;display=inline&amp;height=458&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=472&amp;originWidth=366&amp;size=22264&amp;status=done&amp;style=none&amp;width=355" alt="image.png" />
+当我们执行如下请求时：</p>
+
+<pre><code>ping www.baidu.com
+</code></pre>
+
+<p>首先会根据hosts项中配置的插件，从左向右调用插件的中的回调函数.</p>
+
+<pre><code>调用顺序:  libnss_files.so -&gt; libnss_dns.so -&gt; libnss_myhostname.so
+</code></pre>
+
+<p>具体nss插件如何开发<a href="http://www.gnu.org/software/libc/manual/html_node/NSS-Module-Function-Internals.html">[参考6]</a></p>
+
+<h2 id="二-插件代码">二、插件代码</h2>
+<div class="highlight"><div class="chroma">
+<table class="lntable"><tr><td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="lnt"> 1
+</span><span class="lnt"> 2
+</span><span class="lnt"> 3
+</span><span class="lnt"> 4
+</span><span class="lnt"> 5
+</span><span class="lnt"> 6
+</span><span class="lnt"> 7
+</span><span class="lnt"> 8
+</span><span class="lnt"> 9
+</span><span class="lnt">10
+</span><span class="lnt">11
+</span><span class="lnt">12
+</span><span class="lnt">13
+</span><span class="lnt">14
+</span><span class="lnt">15
+</span><span class="lnt">16
+</span><span class="lnt">17
+</span><span class="lnt">18
+</span><span class="lnt">19
+</span><span class="lnt">20
+</span><span class="lnt">21
+</span><span class="lnt">22
+</span><span class="lnt">23
+</span><span class="lnt">24
+</span><span class="lnt">25
+</span><span class="lnt">26
+</span><span class="lnt">27
+</span><span class="lnt">28
+</span><span class="lnt">29
+</span><span class="lnt">30
+</span><span class="lnt">31
+</span><span class="lnt">32
+</span><span class="lnt">33
+</span><span class="lnt">34
+</span><span class="lnt">35
+</span><span class="lnt">36
+</span><span class="lnt">37
+</span><span class="lnt">38
+</span><span class="lnt">39
+</span><span class="lnt">40
+</span><span class="lnt">41
+</span><span class="lnt">42
+</span><span class="lnt">43
+</span><span class="lnt">44
+</span><span class="lnt">45
+</span><span class="lnt">46
+</span><span class="lnt">47
+</span><span class="lnt">48
+</span><span class="lnt">49
+</span><span class="lnt">50
+</span><span class="lnt">51
+</span><span class="lnt">52
+</span><span class="lnt">53
+</span><span class="lnt">54
+</span><span class="lnt">55
+</span><span class="lnt">56
+</span><span class="lnt">57
+</span><span class="lnt">58
+</span><span class="lnt">59
+</span><span class="lnt">60
+</span><span class="lnt">61
+</span><span class="lnt">62
+</span><span class="lnt">63
+</span><span class="lnt">64
+</span><span class="lnt">65
+</span><span class="lnt">66
+</span><span class="lnt">67
+</span><span class="lnt">68
+</span><span class="lnt">69
+</span><span class="lnt">70
+</span><span class="lnt">71
+</span><span class="lnt">72
+</span><span class="lnt">73
+</span><span class="lnt">74
+</span><span class="lnt">75
+</span></code></pre></td>
+<td class="lntd">
+<pre class="chroma"><code class="language-c" data-lang="c"><span class="cp">#include</span> <span class="cpf">&#34;hs.h&#34;</span><span class="cp">
+</span><span class="cp"></span>
+
+<span class="cp">#include</span> <span class="cpf">&lt;stddef.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;nss.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;netdb.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;arpa/inet.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;syslog.h&gt;</span><span class="cp">
+</span><span class="cp">#include</span> <span class="cpf">&lt;zconf.h&gt;</span><span class="cp">
+</span><span class="cp"></span>
+
+<span class="k">enum</span> <span class="n">nss_status</span> <span class="nf">_nss_hs_gethostbyname4_r</span><span class="p">(</span>
+        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span>
+        <span class="k">struct</span> <span class="n">gaih_addrtuple</span> <span class="o">**</span><span class="n">pat</span><span class="p">,</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">buffer</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">buflen</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">errnop</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">h_errnop</span><span class="p">,</span>
+        <span class="n">int32_t</span> <span class="o">*</span><span class="n">ttlp</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">syslog</span><span class="p">(</span><span class="n">LOG_ERR</span><span class="p">,</span> <span class="s">&#34;_nss_hs_gethostbyname4_r ns hook domain:%s  pid:%d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+
+    <span class="k">return</span> <span class="n">NSS_STATUS_NOTFOUND</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">enum</span> <span class="n">nss_status</span> <span class="nf">_nss_hs_gethostbyname3_r</span><span class="p">(</span>
+        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">af</span><span class="p">,</span>
+        <span class="k">struct</span> <span class="n">hostent</span> <span class="o">*</span><span class="n">host</span><span class="p">,</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">buffer</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">buflen</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">errnop</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">h_errnop</span><span class="p">,</span>
+        <span class="n">int32_t</span> <span class="o">*</span><span class="n">ttlp</span><span class="p">,</span>
+        <span class="kt">char</span> <span class="o">**</span><span class="n">canonp</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="n">syslog</span><span class="p">(</span><span class="n">LOG_ERR</span><span class="p">,</span> <span class="s">&#34;_nss_hs_gethostbyname3_r ns hook domain:%s  pid:%d</span><span class="se">\n</span><span class="s">&#34;</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">getpid</span><span class="p">());</span>
+
+    <span class="k">return</span> <span class="n">NSS_STATUS_NOTFOUND</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">enum</span> <span class="n">nss_status</span> <span class="nf">_nss_hs_gethostbyname2_r</span><span class="p">(</span>
+        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="n">af</span><span class="p">,</span>
+        <span class="k">struct</span> <span class="n">hostent</span> <span class="o">*</span><span class="n">host</span><span class="p">,</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">buffer</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">buflen</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">errnop</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">h_errnop</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">return</span> <span class="n">_nss_hs_gethostbyname3_r</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">af</span><span class="p">,</span>
+            <span class="n">host</span><span class="p">,</span>
+            <span class="n">buffer</span><span class="p">,</span> <span class="n">buflen</span><span class="p">,</span>
+            <span class="n">errnop</span><span class="p">,</span> <span class="n">h_errnop</span><span class="p">,</span>
+            <span class="nb">NULL</span><span class="p">,</span>
+            <span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">enum</span> <span class="n">nss_status</span> <span class="nf">_nss_hs_gethostbyname_r</span><span class="p">(</span>
+        <span class="k">const</span> <span class="kt">char</span> <span class="o">*</span><span class="n">name</span><span class="p">,</span>
+        <span class="k">struct</span> <span class="n">hostent</span> <span class="o">*</span><span class="n">host</span><span class="p">,</span>
+        <span class="kt">char</span> <span class="o">*</span><span class="n">buffer</span><span class="p">,</span> <span class="n">size_t</span> <span class="n">buflen</span><span class="p">,</span>
+        <span class="kt">int</span> <span class="o">*</span><span class="n">errnop</span><span class="p">,</span> <span class="kt">int</span> <span class="o">*</span><span class="n">h_errnop</span><span class="p">)</span> <span class="p">{</span>
+
+    <span class="k">return</span> <span class="n">_nss_hs_gethostbyname3_r</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="n">AF_UNSPEC</span><span class="p">,</span>
+            <span class="n">host</span><span class="p">,</span>
+            <span class="n">buffer</span><span class="p">,</span> <span class="n">buflen</span><span class="p">,</span>
+            <span class="n">errnop</span><span class="p">,</span> <span class="n">h_errnop</span><span class="p">,</span>
+            <span class="nb">NULL</span><span class="p">,</span>
+            <span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">void</span> <span class="nf">_nss_hs_init</span><span class="p">(</span><span class="kt">void</span> <span class="p">(</span><span class="o">*</span><span class="n">cb</span><span class="p">)(</span><span class="n">size_t</span><span class="p">,</span> <span class="k">struct</span> <span class="n">traced_file</span><span class="o">*</span><span class="p">))</span> <span class="p">{</span>
+
+
+    <span class="n">syslog</span><span class="p">(</span><span class="n">LOG_ERR</span><span class="p">,</span> <span class="s">&#34;_nss_hs_init...&#34;</span><span class="p">);</span>
+<span class="p">}</span></code></pre></td></tr></table>
+</div>
+</div>
+<h2 id="三-编译-安装">三、编译/安装</h2>
+
+<ol>
+<li><p>编译插件</p>
+
+<pre><code>gcc -shared -fPIC -o libnss_hs.so.2 -Wl,-soname,libnss_hs.so.2 hs.c
+</code></pre></li>
+
+<li><p>安装插件</p>
+
+<pre><code>cp libnss_hs.so.2 /lib64/libnss_hs.so
+ldconfig
+</code></pre></li>
+
+<li><p>修改配置文件，加载插件</p></li>
+</ol>
+
+<p>vim /etc/nsswitch.conf </p>
+
+<pre><code>hosts:     hs files dns myhostname
+</code></pre>
+
+<h2 id="四-测试">四、测试</h2>
+
+<ol>
+<li>窗口1、执行 sudo service nscd stop</li>
+<li>窗口1 、执行tail -f /var/log/messages</li>
+<li>窗口2、执行 ping foo</li>
+</ol>
+
+<p>在message里会看到如下内容：
+<img src="https://cdn.nlark.com/yuque/0/2021/png/244636/1611053113113-a111832a-f740-4dac-a4f9-938fd08c742e.png#align=left&amp;display=inline&amp;height=67&amp;margin=%5Bobject%20Object%5D&amp;name=image.png&amp;originHeight=134&amp;originWidth=1540&amp;size=55226&amp;status=done&amp;style=none&amp;width=770" alt="image.png" /></p>
+
+<h2 id="五-注意事项">五、注意事项</h2>
+
+<ol>
+<li>如果开启着nscd服务（DNS缓存服务）<a href="https://yuerblog.cc/2020/05/23/nscd-dns%E7%BC%93%E5%AD%98%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E4%B8%8E%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0/">[参考7]</a>，第二次请求就捕获不到了，因为缓存了（默认缓存时间貌似是60s）
+
+<ol>
+<li>解决方案：无，只要第一次请求能捕获到，第二次请求的重要性就不太大了，毕竟缓存会过期</li>
+</ol></li>
+<li>nscd服务会定时更新缓存，你会发现这台机器不断在dns query
+
+<ol>
+<li>解决方案：过滤掉nscd进程即可，虽然不够优雅</li>
+</ol></li>
+<li>nscd服务器开启的情况下，所有dns查询进程都走nscd进程，获取的进程pid也是nscd进程的pid<a href="https://yuerblog.cc/2020/05/23/nscd-dns%E7%BC%93%E5%AD%98%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E4%B8%8E%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0/">[参考7]</a>
+
+<ol>
+<li>解决方案：目前没有更好的解决方案</li>
+</ol></li>
+
+<li><p>如上遇到的大部分问题都是由于nscd服务所造成，那么使用dnsmasq服务的机器又会如何？</p>
+
+<ol>
+<li><p>解决方案：目前没有更好的解决方案</p>
+
+<h2 id="六-参考">六、参考</h2></li>
+</ol></li>
+
+<li><p><a href="https://www.cnblogs.com/yanghehe/p/12294134.html">https://www.cnblogs.com/yanghehe/p/12294134.html</a></p></li>
+
+<li><p><a href="https://blog.csdn.net/water_cow/article/details/7190880">https://blog.csdn.net/water_cow/article/details/7190880</a></p></li>
+
+<li><p><a href="https://github.com/tingar/libnss_etcd">https://github.com/tingar/libnss_etcd</a></p></li>
+
+<li><p><a href="https://zwischenzugs.com/2018/06/08/anatomy-of-a-linux-dns-lookup-part-i/">https://zwischenzugs.com/2018/06/08/anatomy-of-a-linux-dns-lookup-part-i/</a></p></li>
+
+<li><p><a href="http://log.or.cz/?p=77">http://log.or.cz/?p=77</a></p></li>
+
+<li><p><a href="http://www.gnu.org/software/libc/manual/html_node/NSS-Module-Function-Internals.html">http://www.gnu.org/software/libc/manual/html_node/NSS-Module-Function-Internals.html</a></p></li>
+
+<li><p><a href="https://yuerblog.cc/2020/05/23/nscd-dns%E7%BC%93%E5%AD%98%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E4%B8%8E%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0/">https://yuerblog.cc/2020/05/23/nscd-dns%E7%BC%93%E5%AD%98%E7%9A%84%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86%E4%B8%8E%E5%85%B3%E9%94%AE%E5%8F%82%E6%95%B0/</a></p></li>
+
+<li><p><a href="https://busybox.net/~vda/unscd/nscd-0.51.c">https://busybox.net/~vda/unscd/nscd-0.51.c</a></p></li>
+</ol>
+
+    </article>
+
+
+
+
+    <ul class="pager article-pager">
+      <li class="pager-newer">
+          <a href="/posts/linux-privilege-escalation/" data-toggle="tooltip" data-placement="top" title="Linux 提权检测研究">&lt; Newer</a>
+      </li>
+      <li class="pager-older">
+        <a href="/posts/struts-bypass-sandbox/" data-toggle="tooltip" data-placement="top" title="Struts2 OGNL沙箱历史绕过方式总结">Older &gt;</a>
+      </li>
+    </ul>
+
+          <div id="gitalk-container"></div>
+  <link rel="stylesheet" href="https://unpkg.com/gitalk/dist/gitalk.css">
+  <script src="https://unpkg.com/gitalk/dist/gitalk.min.js"></script>
+  <script>
+var gitalk = new Gitalk({
+  clientID: '2f61b9423ddfde01f318',
+  clientSecret: 'ae6360004775eb79f1069c0ea047f2fcd0f8cfc7',
+  repo: 'dean2021.github.io',
+  owner: 'dean2021',
+  admin: ['dean2021'],
+  id: location.pathname,      
+  distractionFreeMode: false  
+})
+
+gitalk.render('gitalk-container')
+  </script>
+
+
+
+  </div>
+
+
+<div class="site-footer">
+  <div class="copyright">&copy; Copyright 2018 Dean</div>
+  <ul class="site-footer-items">
+    <li class="site-footer-item-about"><a href="/about/" title="About">About</a></li>
+  </ul>
+  <div class="powerdby">
+    Powered by <a href="https://gohugo.io/">Hugo</a>  and Dean
+  </div>
+</div>
+
+
+</body>
+</html>
